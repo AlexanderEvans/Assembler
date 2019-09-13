@@ -72,6 +72,16 @@ namespace Assembler
                         Console.WriteLine("Symbol Label(" + tempStr + ") is too long, must be less than 12 charachters in length, skipping: \"" + currentLine + "\"\n");
                         discardLine = true;
                     }
+                    else if (tempStr.Length == 0)
+                    {
+                        Console.WriteLine("Symbol Label(" + tempStr + ") is empty, skipping: \"" + currentLine + "\"\n");
+                        discardLine = true;
+                    }
+                    else if (char.IsLetter(tempStr[0]))
+                    {
+                        Console.WriteLine("Symbol Label(" + tempStr + ") does not start with a letter, skipping: \"" + currentLine + "\"\n");
+                        discardLine = true;
+                    }
                     else//only continue validation on short Label that fit in the 12 chars
                     {
                         foreach (char c in tempStr)
