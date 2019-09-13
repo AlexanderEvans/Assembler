@@ -63,12 +63,15 @@ namespace Assembler
                         Console.WriteLine("Symbol Label is too long, must be less than 12 charachters in length, skipping: \"" + currentLine + "\"\n");
                         discardLine = true;
                     }
-                    foreach (char c in tempStr)
+                    else//only continue validation on short Symbols that fit in the 12 chars
                     {
-                        if (!char.IsLetterOrDigit(c))
+                        foreach (char c in tempStr)
                         {
-                            Console.WriteLine("invalid special charachters detected in symbol, skipping: \"" + currentLine + "\"\n");
-                            discardLine = true;
+                            if (!char.IsLetterOrDigit(c))
+                            {
+                                Console.WriteLine("invalid special charachters detected in symbol, skipping: \"" + currentLine + "\"\n");
+                                discardLine = true;
+                            }
                         }
                     }
 
