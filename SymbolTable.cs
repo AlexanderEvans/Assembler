@@ -77,9 +77,10 @@ namespace Assembler
 
                     //validate RFlag
                     string [] flagStrings = symbolSubstrings[1].Trim().Split(' ');
+                    string rFlag = flagStrings[0].Trim();
+                    string value = flagStrings[1].Trim();
 
-
-                    if(!discardLine)
+                    if (!discardLine)
                     {
                         //parse Label
                         int symbolLabelIndex = 0;
