@@ -16,7 +16,7 @@ namespace Assembler
         public struct Symbol
         {
             //given data from file
-            public char [] label;//the symbols's name/Identifier string/Label
+            public char[] label;//the symbols's name/Identifier string/Label
             public bool RFlag;
             public int value;
 
@@ -56,12 +56,12 @@ namespace Assembler
                 currentLine = streamReader.ReadLine().Trim();
 
                 //check incorrect colon seperator count
-                if (countStringCharachter(currentLine, ':') != 1)
+                if (currentLine.countStringCharachters(':') != 1)
                 {
                     Console.WriteLine("Extra colon seperators in current line, skipping: \"" + currentLine + "\"\n");
                     discardLine = true;
                 }
-                if(!discardLine)
+                if (!discardLine)
                 {
                     string[] symbolSubstrings = currentLine.Split(':');
 
@@ -88,7 +88,7 @@ namespace Assembler
                         {
                             if (!char.IsLetterOrDigit(c))
                             {
-                                Console.WriteLine("invalid special charachters detected in Symbol Label("+ tempStr + "), skipping: \"" + currentLine + "\"\n");
+                                Console.WriteLine("invalid special charachters detected in Symbol Label(" + tempStr + "), skipping: \"" + currentLine + "\"\n");
                                 discardLine = true;
                             }
                         }
@@ -98,7 +98,7 @@ namespace Assembler
 
                     //validate RFlag
                     rFlag = flagStrings[0].Trim();
-                    if(rFlag == "true" || rFlag == "1")
+                    if (rFlag == "true" || rFlag == "1")
                     {
                         symbol.RFlag = true;
                     }
@@ -109,10 +109,10 @@ namespace Assembler
                     else
                     {
                         discardLine = true;
-                        Console.WriteLine("invalid RFlag value("+rFlag+"), skipping: \"" + currentLine + "\"\n");
+                        Console.WriteLine("invalid RFlag value(" + rFlag + "), skipping: \"" + currentLine + "\"\n");
                     }
 
-                    if(!discardLine)
+                    if (!discardLine)
                     {
                         string value = flagStrings[1].Trim();
                         if (!int.TryParse(value, out symbol.value))
@@ -133,11 +133,11 @@ namespace Assembler
                             symbol.MFlag = false;
                             symbol.IFlag = true;
 
-                            if(!SymbolTableBST.ContainsKey(symbol.label))
+                            if (!SymbolTableBST.ContainsKey(symbol.label))
                             {
                                 Console.WriteLine("Symbol with same Label(" + symbol.label + ") already exists!  Setting MFlag & skipping: \"" + currentLine + "\"\n");
                                 Symbol sym = SymbolTableBST.GetValueOrDefault(symbol.label);
-                                if(sym.MFlag==false)
+                                if (sym.MFlag == false)
                                 {
                                     sym.MFlag = true;
                                     SymbolTableBST.Remove(symbol.label);
@@ -146,23 +146,17 @@ namespace Assembler
                             }
                             else
                             {
+                                Console.WriteLine("Adding symbol:" + symbol + "\"\n");
                                 SymbolTableBST.Add(symbol.label, symbol);
                             }
                         }
                     }
                 }
             }
-        }
-
-        int countStringCharachter(string str, char myChar)
-        {
-            int count = 0;
-            foreach(char c in str)
-            {
-                if (c == myChar)
-                    count++;
-            }
-            return count;
+            streamReader.Close();
+            fileStream.Close();//close wait
+            streamReader.Dispose();
+            fileStream.Dispose();
         }
     }
 }
