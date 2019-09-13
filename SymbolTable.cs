@@ -92,22 +92,27 @@ namespace Assembler
                         Console.WriteLine("invalid RFlag value("+rFlag+"), skipping: \"" + currentLine + "\"\n");
                     }
 
-                    string value = flagStrings[1].Trim();
-                    if(!int.TryParse(value, out symbol.value))
+                    if(!discardLine)
                     {
-                        discardLine = true;
-                        Console.WriteLine("invalid integer value("+value+"), skipping: \"" + currentLine + "\"\n");
-                    }
-
-                    if (!discardLine)
-                    {
-                        //parse Label
-                        int symbolLabelIndex = 0;
-                        for (symbolLabelIndex = 0; symbolLabelIndex < 6 && symbolLabelIndex < tempStr.Length; symbolLabelIndex++)
+                        string value = flagStrings[1].Trim();
+                        if (!int.TryParse(value, out symbol.value))
                         {
-                            symbol.label[symbolLabelIndex] = tempStr[symbolLabelIndex];
+                            discardLine = true;
+                            Console.WriteLine("invalid integer value(" + value + "), skipping: \"" + currentLine + "\"\n");
                         }
-                        symbol.label[symbolLabelIndex] = '\0';
+
+                        if (!discardLine)
+                        {
+                            //parse Label
+                            int symbolLabelIndex = 0;
+                            for (symbolLabelIndex = 0; symbolLabelIndex < 6 && symbolLabelIndex < tempStr.Length; symbolLabelIndex++)
+                            {
+                                symbol.label[symbolLabelIndex] = tempStr[symbolLabelIndex];
+                            }
+                            symbol.label[symbolLabelIndex] = '\0';
+                            symbol.MFlag = false;
+                            symbol.IFlag = false;
+                        }
                     }
                 }
             }
