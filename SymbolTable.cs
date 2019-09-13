@@ -123,7 +123,7 @@ namespace Assembler
                             symbol.MFlag = false;
                             symbol.IFlag = false;
 
-                            if(SymbolTableBST.TryAdd(symbol.label, symbol))
+                            if(!SymbolTableBST.TryAdd(symbol.label, symbol))
                             {
                                 Console.WriteLine("Symbol with same Label(" + symbol.label + ") already exists, skipping: \"" + currentLine + "\"\n");
                             }
