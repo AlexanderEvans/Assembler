@@ -55,9 +55,14 @@ namespace Assembler
                 if(!discardLine)
                 {
                     string[] parts = currentLine.Split(':');
-                    string tempStr = parts[0].Trim();
 
                     //validate Symbol
+                    string tempStr = parts[0].Trim();
+                    if (tempStr.Length > 12)
+                    {
+                        Console.WriteLine("Symbol Label is too long, must be less than 12 charachters in length, skipping: \"" + currentLine + "\"\n");
+                        discardLine = true;
+                    }
                     foreach (char c in tempStr)
                     {
                         if (!char.IsLetterOrDigit(c))
@@ -66,6 +71,9 @@ namespace Assembler
                             discardLine = true;
                         }
                     }
+
+                    //validate RFlag
+
 
                     if(!discardLine)
                     {
