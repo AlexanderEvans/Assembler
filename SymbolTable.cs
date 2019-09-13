@@ -69,7 +69,7 @@ namespace Assembler
                     string tempStr = symbolSubstrings[0].Trim();
                     if (tempStr.Length > 12)
                     {
-                        Console.WriteLine("Symbol Label is too long, must be less than 12 charachters in length, skipping: \"" + currentLine + "\"\n");
+                        Console.WriteLine("Symbol Label(" + tempStr + ") is too long, must be less than 12 charachters in length, skipping: \"" + currentLine + "\"\n");
                         discardLine = true;
                     }
                     else//only continue validation on short Label that fit in the 12 chars
@@ -78,7 +78,7 @@ namespace Assembler
                         {
                             if (!char.IsLetterOrDigit(c))
                             {
-                                Console.WriteLine("invalid special charachters detected in Symbol Label, skipping: \"" + currentLine + "\"\n");
+                                Console.WriteLine("invalid special charachters detected in Symbol Label("+ tempStr + "), skipping: \"" + currentLine + "\"\n");
                                 discardLine = true;
                             }
                         }
@@ -113,7 +113,7 @@ namespace Assembler
 
                         if (!discardLine)
                         {
-                            //parse Label
+                            //parse data into Symbol struct
                             int symbolLabelIndex = 0;
                             for (symbolLabelIndex = 0; symbolLabelIndex < 6 && symbolLabelIndex < tempStr.Length; symbolLabelIndex++)
                             {
