@@ -54,10 +54,10 @@ namespace Assembler
                 }
                 if(!discardLine)
                 {
-                    string[] parts = currentLine.Split(':');
+                    string[] symbolSubstrings = currentLine.Split(':');
 
                     //validate Label
-                    string tempStr = parts[0].Trim();
+                    string tempStr = symbolSubstrings[0].Trim();
                     if (tempStr.Length > 12)
                     {
                         Console.WriteLine("Symbol Label is too long, must be less than 12 charachters in length, skipping: \"" + currentLine + "\"\n");
@@ -76,6 +76,7 @@ namespace Assembler
                     }
 
                     //validate RFlag
+                    string [] flagStrings = symbolSubstrings[1].Trim().Split(' ');
 
 
                     if(!discardLine)
