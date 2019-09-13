@@ -1,0 +1,11 @@
+C:\Users\anonymous\source\repos\Assembler\Assembler\bin\Debug\netcoreapp2.1\Assembler.deps.json
+C:\Users\anonymous\source\repos\Assembler\Assembler\bin\Debug\netcoreapp2.1\Assembler.runtimeconfig.json
+C:\Users\anonymous\source\repos\Assembler\Assembler\bin\Debug\netcoreapp2.1\Assembler.runtimeconfig.dev.json
+C:\Users\anonymous\source\repos\Assembler\Assembler\bin\Debug\netcoreapp2.1\Assembler.dll
+C:\Users\anonymous\source\repos\Assembler\Assembler\bin\Debug\netcoreapp2.1\Assembler.pdb
+C:\Users\anonymous\source\repos\Assembler\Assembler\obj\Debug\netcoreapp2.1\Assembler.csprojAssemblyReference.cache
+C:\Users\anonymous\source\repos\Assembler\Assembler\obj\Debug\netcoreapp2.1\Assembler.csproj.CoreCompileInputs.cache
+C:\Users\anonymous\source\repos\Assembler\Assembler\obj\Debug\netcoreapp2.1\Assembler.AssemblyInfoInputs.cache
+C:\Users\anonymous\source\repos\Assembler\Assembler\obj\Debug\netcoreapp2.1\Assembler.AssemblyInfo.cs
+C:\Users\anonymous\source\repos\Assembler\Assembler\obj\Debug\netcoreapp2.1\Assembler.dll
+C:\Users\anonymous\source\repos\Assembler\Assembler\obj\Debug\netcoreapp2.1\Assembler.pdb
