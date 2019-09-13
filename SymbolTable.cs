@@ -38,13 +38,22 @@ namespace Assembler
             FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, FileOptions.SequentialScan);
             StreamReader streamReader = new StreamReader(fileStream);
 
-            while(!streamReader.EndOfStream)
+            //discard line flag
+            bool discardLine;
+
+            //get the line and trim whitespace
+            string currentLine;
+
+            string[] flagStrings;
+            string rFlag;
+
+            while (!streamReader.EndOfStream)
             {
                 //discard line flag
-                bool discardLine = false;
+                discardLine = false;
 
                 //get the line and trim whitespace
-                string currentLine = streamReader.ReadLine().Trim();
+                currentLine = streamReader.ReadLine().Trim();
 
                 //check incorrect colon seperator count
                 if (countStringCharachter(currentLine, ':') != 1)
@@ -75,9 +84,10 @@ namespace Assembler
                         }
                     }
 
+                    flagStrings = symbolSubstrings[1].Trim().Split(' ');
+
                     //validate RFlag
-                    string [] flagStrings = symbolSubstrings[1].Trim().Split(' ');
-                    string rFlag = flagStrings[0].Trim();
+                    rFlag = flagStrings[0].Trim();
                     if(rFlag == "true" || rFlag == "1")
                     {
                         symbol.RFlag = true;
@@ -128,6 +138,5 @@ namespace Assembler
             }
             return count;
         }
-
     }
 }
