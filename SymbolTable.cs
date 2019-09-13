@@ -121,11 +121,22 @@ namespace Assembler
                             }
                             symbol.label[symbolLabelIndex] = '\0';
                             symbol.MFlag = false;
-                            symbol.IFlag = false;
+                            symbol.IFlag = true;
 
-                            if(!SymbolTableBST.TryAdd(symbol.label, symbol))
+                            if(!SymbolTableBST.ContainsKey(symbol.label))
                             {
-                                Console.WriteLine("Symbol with same Label(" + symbol.label + ") already exists, skipping: \"" + currentLine + "\"\n");
+                                Console.WriteLine("Symbol with same Label(" + symbol.label + ") already exists!  Setting MFlag & skipping: \"" + currentLine + "\"\n");
+                                Symbol sym = SymbolTableBST.GetValueOrDefault(symbol.label);
+                                if(sym.MFlag==false)
+                                {
+                                    sym.MFlag = true;
+                                    SymbolTableBST.Remove(symbol.label);
+                                    SymbolTableBST.Add(symbol.label, sym);
+                                }
+                            }
+                            else
+                            {
+                                SymbolTableBST.Add(symbol.label, symbol);
                             }
                         }
                     }
