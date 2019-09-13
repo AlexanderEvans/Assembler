@@ -16,7 +16,7 @@ namespace Assembler
         public struct Symbol
         {
             //given data from file
-            public char [] symbol;//the symbols's name/Identifier string/Label
+            public char [] label;//the symbols's name/Identifier string/Label
             public bool RFlag;
             public int value;
 
@@ -34,7 +34,7 @@ namespace Assembler
         void LoadSymbols(string filePath)
         {
             Symbol symbol;
-            symbol.symbol = new char[7];
+            symbol.label = new char[7];
             FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, FileOptions.SequentialScan);
             StreamReader streamReader = new StreamReader(fileStream);
 
@@ -80,12 +80,12 @@ namespace Assembler
 
                     if(!discardLine)
                     {
-                        StringBuilder stringBuilder = new StringBuilder();
-                        for (int i = 0; i < 6 && i < tempStr.Length; i++)
+                        int symbolLabelIndex = 0;
+                        for (symbolLabelIndex = 0; symbolLabelIndex < 6 && symbolLabelIndex < tempStr.Length; symbolLabelIndex++)
                         {
-                            stringBuilder.Append(tempStr[i]);
+                            symbol.label[symbolLabelIndex] = tempStr[symbolLabelIndex];
                         }
-                        symbol.symbol = stringBuilder.ToString().ToCharArray();
+                        symbol.label[symbolLabelIndex] = '\0';
                     }
                 }
             }
