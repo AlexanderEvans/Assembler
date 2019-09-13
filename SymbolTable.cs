@@ -33,7 +33,7 @@ namespace Assembler
 
         void LoadSymbols(string filePath)
         {
-            Symbol symbol;
+            Symbol symbol = default;
             symbol.label = new char[7];
             FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, FileOptions.SequentialScan);
             StreamReader streamReader = new StreamReader(fileStream);
@@ -122,6 +122,11 @@ namespace Assembler
                             symbol.label[symbolLabelIndex] = '\0';
                             symbol.MFlag = false;
                             symbol.IFlag = false;
+
+                            if(SymbolTableBST.TryAdd(symbol.label, symbol))
+                            {
+                                Console.WriteLine("Symbol with same Label(" + symbol.label + ") already exists, skipping: \"" + currentLine + "\"\n");
+                            }
                         }
                     }
                 }
