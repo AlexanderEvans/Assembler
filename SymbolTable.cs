@@ -78,7 +78,26 @@ namespace Assembler
                     //validate RFlag
                     string [] flagStrings = symbolSubstrings[1].Trim().Split(' ');
                     string rFlag = flagStrings[0].Trim();
+                    if(rFlag == "true" || rFlag == "1")
+                    {
+                        symbol.RFlag = true;
+                    }
+                    else if (rFlag == "false" || rFlag == "0")
+                    {
+                        symbol.RFlag = true;
+                    }
+                    else
+                    {
+                        discardLine = true;
+                        Console.WriteLine("invalid RFlag value("+rFlag+"), skipping: \"" + currentLine + "\"\n");
+                    }
+
                     string value = flagStrings[1].Trim();
+                    if(!int.TryParse(value, out symbol.value))
+                    {
+                        discardLine = true;
+                        Console.WriteLine("invalid integer value("+value+"), skipping: \"" + currentLine + "\"\n");
+                    }
 
                     if (!discardLine)
                     {
