@@ -49,27 +49,27 @@ namespace Assembler
                 //check incorrect colon seperator count
                 if (countStringCharachter(currentLine, ':') != 1)
                 {
-                    Console.WriteLine("Extra colon seperator's in current line, skipping: \"" + currentLine + "\"\n");
+                    Console.WriteLine("Extra colon seperators in current line, skipping: \"" + currentLine + "\"\n");
                     discardLine = true;
                 }
                 if(!discardLine)
                 {
                     string[] parts = currentLine.Split(':');
 
-                    //validate Symbol
+                    //validate Label
                     string tempStr = parts[0].Trim();
                     if (tempStr.Length > 12)
                     {
                         Console.WriteLine("Symbol Label is too long, must be less than 12 charachters in length, skipping: \"" + currentLine + "\"\n");
                         discardLine = true;
                     }
-                    else//only continue validation on short Symbols that fit in the 12 chars
+                    else//only continue validation on short Label that fit in the 12 chars
                     {
                         foreach (char c in tempStr)
                         {
                             if (!char.IsLetterOrDigit(c))
                             {
-                                Console.WriteLine("invalid special charachters detected in symbol, skipping: \"" + currentLine + "\"\n");
+                                Console.WriteLine("invalid special charachters detected in Symbol Label, skipping: \"" + currentLine + "\"\n");
                                 discardLine = true;
                             }
                         }
@@ -80,6 +80,7 @@ namespace Assembler
 
                     if(!discardLine)
                     {
+                        //parse Label
                         int symbolLabelIndex = 0;
                         for (symbolLabelIndex = 0; symbolLabelIndex < 6 && symbolLabelIndex < tempStr.Length; symbolLabelIndex++)
                         {
