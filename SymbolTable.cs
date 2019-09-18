@@ -160,8 +160,6 @@ namespace Assembler
                     }
                 }
             }
-            streamReader.Close();
-            fileStream.Close();//close wait
             streamReader.Dispose();
             fileStream.Dispose();
         }
