@@ -61,25 +61,25 @@ namespace Evans1
         //*************************************************************************
         public static StringBuilder CompactWhitespaces(StringBuilder stringBuilder)
         {
-            if (sb.Length != 0)
+            if (stringBuilder.Length != 0)
             {
                 int first;
-                for (first = 0; first < sb.Length && Char.IsWhiteSpace(sb[first]); first++)
+                for (first = 0; first < stringBuilder.Length && Char.IsWhiteSpace(stringBuilder[first]); first++)
                 {
 
                 }
 
                 // if sb has only whitespaces, then return empty string
-                if (first == sb.Length)
+                if (first == stringBuilder.Length)
                 {
-                    sb.Length = 0;
+                    stringBuilder.Length = 0;
                 }
                 else
                 {
                     // set [end] to last not-whitespace char
 
                     int last;
-                    for (last = sb.Length - 1; last >= 0 && Char.IsWhiteSpace(sb[last]); last--)
+                    for (last = stringBuilder.Length - 1; last >= 0 && Char.IsWhiteSpace(stringBuilder[last]); last--)
                     {
 
                     }
@@ -90,25 +90,25 @@ namespace Evans1
 
                     for (int i = first; i <= last; i++)
                     {
-                        if (Char.IsWhiteSpace(sb[i]) && previousIsWhitespace!=true)
+                        if (Char.IsWhiteSpace(stringBuilder[i]) && previousIsWhitespace!=true)
                         {
                             previousIsWhitespace = true;
-                            sb[current] = ' ';
+                            stringBuilder[current] = ' ';
                             current++;
                         }
-                        else if(Char.IsWhiteSpace(sb[i])==false)
+                        else if(Char.IsWhiteSpace(stringBuilder[i])==false)
                         {
                             previousIsWhitespace = false;
-                            sb[current] = sb[i];
+                            stringBuilder[current] = stringBuilder[i];
                             current++;
                         }
                     }
 
-                    sb.Length = current;
+                    stringBuilder.Length = current;
                 }
             }
 
-            return sb;
+            return stringBuilder;
         }
     }
 }
