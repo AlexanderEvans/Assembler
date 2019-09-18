@@ -83,7 +83,7 @@ namespace Assembler
                         Console.WriteLine("Symbol Label(" + tempStr + ") is empty, skipping: \"" + currentLine + "\"\n");
                         discardLine = true;
                     }
-                    else if (char.IsLetter(tempStr[0]))
+                    else if (!char.IsLetter(tempStr[0]))
                     {
                         Console.WriteLine("Symbol Label(" + tempStr + ") does not start with a letter, skipping: \"" + currentLine + "\"\n");
                         discardLine = true;
