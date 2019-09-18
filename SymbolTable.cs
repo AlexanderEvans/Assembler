@@ -36,7 +36,7 @@ namespace Assembler
         /// </summary>
         SortedDictionary<string, Symbol> SymbolTableBST = new SortedDictionary<string, Symbol>();
 
-        void LoadSymbols(string filePath)
+        public void LoadSymbols(string filePath)
         {
             Symbol symbol = default;
             symbol.label = "";
