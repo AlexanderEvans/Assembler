@@ -85,12 +85,12 @@ namespace Assembler
                     }
                     else if (!char.IsLetter(tempStr[0]))
                     {
-                        Console.WriteLine("Symbol Label(" + tempStr + ") does not start with a letter, skipping: \"" + currentLine + "\"\n");
+                        Console.WriteLine("Symbol Label(" + tempStr + ") does not start with a letter(" + tempStr[0] + "), skipping: \"" + currentLine + "\"\n");
                         discardLine = true;
                     }
                     else//only continue validation on short Label that fit in the 12 chars
                     {
-                        foreach (char c in tempStr)
+                        for (int i = 0; i < tempStr.Length && discardLine == false; i++)
                         {
                             if (!char.IsLetterOrDigit(tempStr[i]))
                             {
@@ -125,6 +125,9 @@ namespace Assembler
                         {
                             discardLine = true;
                             Console.WriteLine("invalid integer value(" + value + "), skipping: \"" + currentLine + "\"\n");
+                            int i = 0;
+                            foreach (string s in flagStrings)
+                                Console.WriteLine((i++) + s);
                         }
 
                         if (!discardLine)
@@ -153,7 +156,8 @@ namespace Assembler
                             }
                             else
                             {
-                                Console.WriteLine("Adding symbol:" + symbol + "\"\n");
+                                Console.WriteLine("Adding symbol: ");
+                                symbol.Print();
                                 SymbolTableBST.Add(symbol.label, symbol);
                             }
                         }
