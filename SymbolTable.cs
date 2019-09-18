@@ -64,7 +64,7 @@ namespace Assembler
                 //check incorrect colon seperator count
                 if (currentLine.CountStringCharachters(':') != 1)
                 {
-                    Console.WriteLine("Extra colon seperators in current line, skipping: \"" + currentLine + "\"");
+                    Console.WriteLine("Error Adding Symbol: Extra colon seperators in current line, skipping: \"" + currentLine + "\"");
                     discardLine = true;
                 }
                 if (!discardLine)
@@ -75,17 +75,17 @@ namespace Assembler
                     string tempStr = symbolSubstrings[0].Trim();
                     if (tempStr.Length > 12)
                     {
-                        Console.WriteLine("Symbol Label(" + tempStr + ") is too long, must be less than 12 charachters in length, skipping: \"" + currentLine + "\"");
+                        Console.WriteLine("Error Adding Symbol: Symbol Label(" + tempStr + ") is too long, must be less than 12 charachters in length, skipping: \"" + currentLine + "\"");
                         discardLine = true;
                     }
                     else if (tempStr.Length == 0)
                     {
-                        Console.WriteLine("Symbol Label(" + tempStr + ") is empty, skipping: \"" + currentLine + "\"");
+                        Console.WriteLine("Error Adding Symbol: Symbol Label(" + tempStr + ") is empty, skipping: \"" + currentLine + "\"");
                         discardLine = true;
                     }
                     else if (!char.IsLetter(tempStr[0]))
                     {
-                        Console.WriteLine("Symbol Label(" + tempStr + ") does not start with a letter(" + tempStr[0] + "), skipping: \"" + currentLine + "\"");
+                        Console.WriteLine("Error Adding Symbol: Symbol Label(" + tempStr + ") does not start with a letter(" + tempStr[0] + "), skipping: \"" + currentLine + "\"");
                         discardLine = true;
                     }
                     else//only continue validation on short Label that fit in the 12 chars
@@ -94,7 +94,7 @@ namespace Assembler
                         {
                             if (!char.IsLetterOrDigit(tempStr[i]))
                             {
-                                Console.WriteLine("invalid special charachters detected in Symbol Label(" + tempStr + "), skipping: \"" + currentLine + "\"");
+                                Console.WriteLine("Error Adding Symbol: invalid special charachters detected in Symbol Label(" + tempStr + "), skipping: \"" + currentLine + "\"");
                                 discardLine = true;
                             }
                         }
@@ -115,7 +115,7 @@ namespace Assembler
                     else
                     {
                         discardLine = true;
-                        Console.WriteLine("invalid RFlag value(" + rFlag + "), skipping: \"" + currentLine + "\"");
+                        Console.WriteLine("Error Adding Symbol: invalid RFlag value(" + rFlag + "), skipping: \"" + currentLine + "\"");
                     }
 
                     if (!discardLine)
@@ -124,7 +124,7 @@ namespace Assembler
                         if (!int.TryParse(value, out symbol.value))
                         {
                             discardLine = true;
-                            Console.WriteLine("invalid integer value(" + value + "), skipping: \"" + currentLine + "\"");
+                            Console.WriteLine("Error Adding Symbol: invalid integer value(" + value + "), skipping: \"" + currentLine + "\"");
                         }
 
                         if (!discardLine)
@@ -142,7 +142,7 @@ namespace Assembler
 
                             if (SymbolTableBST.ContainsKey(symbol.label))
                             {
-                                Console.WriteLine("Symbol with same Label(" + symbol.label + ") already exists!  Setting MFlag & skipping: \"" + currentLine + "\"");
+                                Console.WriteLine("Error Adding Symbol: Symbol with same Label(" + symbol.label + ") already exists!  Setting MFlag & skipping: \"" + currentLine + "\"");
                                 Symbol sym = SymbolTableBST.GetValueOrDefault(symbol.label);
                                 if (sym.MFlag == false)
                                 {
