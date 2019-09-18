@@ -6,7 +6,7 @@ namespace Assembler
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Console.WriteLine("Loading symbols...");
             SymbolTable symbolTable = new SymbolTable();
             symbolTable.LoadSymbols("../../../SYMBOLS.DAT");
             Console.WriteLine();
