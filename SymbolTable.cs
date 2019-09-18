@@ -23,6 +23,11 @@ namespace Assembler
             //deduced data
             public bool IFlag;
             public bool MFlag;
+
+            public void Print()
+            {
+                Console.WriteLine(label + "\t" + RFlag + "\t" + value + "\t" + MFlag + "\t" + IFlag);
+            }
         }
 
         /// <summary>
@@ -159,6 +164,15 @@ namespace Assembler
             fileStream.Close();//close wait
             streamReader.Dispose();
             fileStream.Dispose();
+        }
+         
+        public void Print()
+        {
+            foreach (KeyValuePair<string, Symbol> keyValuePair in SymbolTableBST)
+            {
+                Console.WriteLine("Symbol RFlag Value MFlag IFlag");
+                keyValuePair.Value.Print();
+            }
         }
     }
 }
