@@ -1,6 +1,15 @@
 ﻿using System;
-
-namespace Assembler
+/*****************************************************************************
+*** NAME : Alex Evans
+*** CLASS : CSc 354 Intro to systems
+*** ASSIGNMENT : 1
+*** DUE DATE : 9/18/2019
+*** INSTRUCTOR : GAMRADT
+******************************************************************************
+*** DESCRIPTION :   This program implements a symbol table to be used by an
+***                 assembler                                
+*****************************************************************************/
+namespace Evans1
 {
     class Program
     {

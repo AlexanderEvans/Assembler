@@ -4,7 +4,7 @@ using System.Text;
 using System.IO;
 
 
-namespace Assembler
+namespace Evans1
 {
     /// <summary>
     /// A wrapper for a SortedDictionary(BST ADT) that adds helper functions for parsing and setting values for 
@@ -50,7 +50,7 @@ namespace Assembler
             //get the line and trim whitespace
             string currentLine;
 
-            string[] flagStrings;
+            string[] rflagAndValueStrings;
             string rFlag;
 
             while (!streamReader.EndOfStream)
@@ -100,10 +100,10 @@ namespace Assembler
                         }
                     }
 
-                    flagStrings = symbolSubstrings[1].Trim().Split(' ');
+                    rflagAndValueStrings = symbolSubstrings[1].Trim().Split(' ');
 
                     //validate RFlag
-                    rFlag = flagStrings[0].Trim();
+                    rFlag = rflagAndValueStrings[0].Trim();
                     if (rFlag == "true" || rFlag == "1")
                     {
                         symbol.RFlag = true;
@@ -120,7 +120,7 @@ namespace Assembler
 
                     if (!discardLine)
                     {
-                        string value = flagStrings[1].Trim();
+                        string value = rflagAndValueStrings[1].Trim();
                         if (!int.TryParse(value, out symbol.value))
                         {
                             discardLine = true;
@@ -165,6 +165,7 @@ namespace Assembler
             fileStream.Dispose();
         }
 
+        //Takes a string and searches for a symbol that fits that key
         Symbol? SearchSymbol(string str)
         {
             Symbol? tempN = null;
@@ -176,6 +177,7 @@ namespace Assembler
             return tempN;
         }
 
+        //takes a file path and farses the file and searches the symboltable for the parsed lables, printing them to the console
         public void SearchSymbols(string filePath)
         {
             FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, FileOptions.SequentialScan);
@@ -234,6 +236,7 @@ namespace Assembler
 
         }
 
+        //prints the current contents of the symbol table
         public void Print()
         {
             Console.WriteLine("Symbol\tRFlag\tValue \tMFlag \tIFlag");

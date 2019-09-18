@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Assembler
+namespace Evans1
 {
     // Extension methods must be defined in a static class.
     public static class StringExtensions
