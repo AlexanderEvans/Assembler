@@ -92,7 +92,7 @@ namespace Assembler
                     {
                         foreach (char c in tempStr)
                         {
-                            if (!char.IsLetterOrDigit(c))
+                            if (!char.IsLetterOrDigit(tempStr[i]))
                             {
                                 Console.WriteLine("invalid special charachters detected in Symbol Label(" + tempStr + "), skipping: \"" + currentLine + "\"\n");
                                 discardLine = true;
@@ -140,7 +140,7 @@ namespace Assembler
                             symbol.MFlag = false;
                             symbol.IFlag = true;
 
-                            if (!SymbolTableBST.ContainsKey(symbol.label))
+                            if (SymbolTableBST.ContainsKey(symbol.label))
                             {
                                 Console.WriteLine("Symbol with same Label(" + symbol.label + ") already exists!  Setting MFlag & skipping: \"" + currentLine + "\"\n");
                                 Symbol sym = SymbolTableBST.GetValueOrDefault(symbol.label);
