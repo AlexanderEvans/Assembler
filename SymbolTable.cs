@@ -125,9 +125,6 @@ namespace Assembler
                         {
                             discardLine = true;
                             Console.WriteLine("invalid integer value(" + value + "), skipping: \"" + currentLine + "\"\n");
-                            int i = 0;
-                            foreach (string s in flagStrings)
-                                Console.WriteLine((i++) + s);
                         }
 
                         if (!discardLine)
@@ -170,9 +167,9 @@ namespace Assembler
          
         public void Print()
         {
+            Console.WriteLine("Symbol\tRFlag\tValue \tMFlag \tIFlag");
             foreach (KeyValuePair<string, Symbol> keyValuePair in SymbolTableBST)
             {
-                Console.WriteLine("Symbol RFlag Value MFlag IFlag");
                 keyValuePair.Value.Print();
             }
         }
