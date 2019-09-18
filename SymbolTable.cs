@@ -94,7 +94,7 @@ namespace Assembler
                         {
                             if (!char.IsLetterOrDigit(tempStr[i]))
                             {
-                                Console.WriteLine("Error Adding Symbol: invalid special charachters detected in Symbol Label(" + tempStr + "), skipping: \"" + currentLine + "\"");
+                                Console.WriteLine("Error Adding Symbol: invalid special charachters(" + tempStr[i] + ") detected in Symbol Label(" + tempStr + "), skipping: \"" + currentLine + "\"");
                                 discardLine = true;
                             }
                         }
@@ -142,7 +142,7 @@ namespace Assembler
 
                             if (SymbolTableBST.ContainsKey(symbol.label))
                             {
-                                Console.WriteLine("Error Adding Symbol: Symbol with same Label(" + symbol.label + ") already exists!  Setting MFlag & skipping: \"" + currentLine + "\"");
+                                Console.WriteLine("Error Adding Symbol: Symbol with same Label('" + symbol.label + "') already exists!  Setting MFlag & skipping: \"" + currentLine + "\"");
                                 Symbol sym = SymbolTableBST.GetValueOrDefault(symbol.label);
                                 if (sym.MFlag == false)
                                 {
@@ -205,7 +205,7 @@ namespace Assembler
                     {
                         if (!char.IsLetterOrDigit(currentLine[i]))
                         {
-                            Console.WriteLine("Error Seeking Symbol: invalid special charachters detected in Symbol Label(" + currentLine + "), skipping: \"" + currentLine + "\"");
+                            Console.WriteLine("Error Seeking Symbol: invalid special charachters('" + currentLine[i] + "') detected in Symbol Label(" + currentLine + "), skipping: \"" + currentLine + "\"");
                             discardLine = true;
                         }
                     }
