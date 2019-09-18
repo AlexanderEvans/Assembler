@@ -29,6 +29,7 @@ namespace Assembler
             {
                 filePath = args[0];
             }
+            symbolTable.SearchSymbols(filePath);
         }
     }
 }

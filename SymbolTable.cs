@@ -164,6 +164,11 @@ namespace Assembler
             streamReader.Dispose();
             fileStream.Dispose();
         }
+
+        public void SearchSymbols(string filepath)
+        {
+
+        }
          
         public void Print()
         {
