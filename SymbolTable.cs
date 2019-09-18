@@ -165,11 +165,75 @@ namespace Assembler
             fileStream.Dispose();
         }
 
-        public void SearchSymbols(string filepath)
+        Symbol? SearchSymbol(string str)
         {
+            Symbol? tempN = null;
+            Symbol temp;
+            if(SymbolTableBST.TryGetValue(str, out temp))
+            {
+                tempN = temp;
+            }
+            return tempN;
+        }
+
+        public void SearchSymbols(string filePath)
+        {
+            FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, FileOptions.SequentialScan);
+            StreamReader streamReader = new StreamReader(fileStream);
+
+            while (!streamReader.EndOfStream)
+            {
+                //get the line and trim whitespace
+                string currentLine = streamReader.ReadLine().CompactAndTrimWhitespaces();
+
+                if (currentLine.Length > 12)
+                {
+                    Console.WriteLine("Error Seeking Symbol: Symbol Label(" + currentLine + ") is too long, must be less than 12 charachters in length, skipping: \"" + currentLine + "\"");
+                }
+                else if (currentLine.Length == 0)
+                {
+                    Console.WriteLine("Error Seeking Symbol: Symbol Label(" + currentLine + ") is empty, skipping: \"" + currentLine + "\"");
+                }
+                else if (!char.IsLetter(currentLine[0]))
+                {
+                    Console.WriteLine("Error Seeking Symbol: Symbol Label(" + currentLine + ") does not start with a letter(" + currentLine[0] + "), skipping: \"" + currentLine + "\"");
+                }
+                else//only continue validation on short Label that fit in the 12 chars
+                {
+                    bool discardLine = false;
+                    for (int i = 0; i < currentLine.Length && discardLine == false; i++)
+                    {
+                        if (!char.IsLetterOrDigit(currentLine[i]))
+                        {
+                            Console.WriteLine("Error Seeking Symbol: invalid special charachters detected in Symbol Label(" + currentLine + "), skipping: \"" + currentLine + "\"");
+                            discardLine = true;
+                        }
+                    }
+                    if(discardLine==false)
+                    {
+                        StringBuilder stringBuilder = new StringBuilder();
+                        for (int i = 0; i < currentLine.Length && i < 6; i++)
+                            stringBuilder.Append(currentLine[i]);
+                        Symbol? temp = SearchSymbol(stringBuilder.ToString());
+                        if(temp.HasValue)
+                        {
+                            Console.Write("Found symbol: ");
+                            temp.Value.Print();
+                        }
+                        else
+                        {
+                            Console.WriteLine("Symbol(" + currentLine + ") not found");
+                        }
+                    }
+                }
+
+            }
+
+            streamReader.Dispose();
+            fileStream.Dispose();
 
         }
-         
+
         public void Print()
         {
             Console.WriteLine("Symbol\tRFlag\tValue \tMFlag \tIFlag");
