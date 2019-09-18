@@ -4,12 +4,27 @@ using System.Text;
 
 namespace Evans1
 {
-    // Extension methods must be defined in a static class.
+    //*******************************************************************
+    //*** NAME : Alex Evans
+    //*** CLASS : CSc 354 Intro to systems
+    //*** ASSIGNMENT : 1
+    //*** DUE DATE : 9/18/2019
+    //*** INSTRUCTOR : GAMRADT 
+    //********************************************************************
+    //*** DESCRIPTION :   This class adds string extensions for string 
+    //***                 parsing
+    //********************************************************************
     public static class StringExtensions
     {
-        // This is the extension method.
-        // The first parameter takes the "this" modifier
-        // and specifies the type for which the method is defined.
+        //************************************************************************
+        //***  FUNCTION CountStringCharachters 
+        //*** ********************************************************************
+        //***  DESCRIPTION  :  Counts the occurances of a charachter in a string
+        //***  INPUT ARGS   :  this string str, char myChar
+        //***  OUTPUT ARGS :  N/A
+        //***  IN/OUT ARGS   :  N/A  
+        //***  RETURN :  int count
+        //************************************************************************
         public static int CountStringCharachters(this string str, char myChar)
         {
             int count = 0;
@@ -20,13 +35,31 @@ namespace Evans1
             }
             return count;
         }
-
+        //*************************************************************************
+        //***  FUNCTION CountStringCharachters 
+        //*** *********************************************************************
+        //***  DESCRIPTION  :  Converts string to string builder 
+        //***                     and calls CompactWhitespaces
+        //***  INPUT ARGS   :  this string str
+        //***  OUTPUT ARGS :  N/A
+        //***  IN/OUT ARGS   :  N/A  
+        //***  RETURN :  string N/A 
+        //*************************************************************************
         public static String CompactAndTrimWhitespaces(this string str)
         {
             return CompactWhitespaces(new StringBuilder(str)).ToString();
         }
-
-        public static StringBuilder CompactWhitespaces(StringBuilder sb)
+        //*************************************************************************
+        //***  FUNCTION CountStringCharachters 
+        //*** *********************************************************************
+        //***  DESCRIPTION  :  trims leading and trailing whitespace and converts
+        //***                     all other whitespace to a single space
+        //***  INPUT ARGS   :  StringBuilder stringBuilder
+        //***  OUTPUT ARGS :  N/A
+        //***  IN/OUT ARGS   :  N/A  
+        //***  RETURN :  StringBuilder stringBuilder
+        //*************************************************************************
+        public static StringBuilder CompactWhitespaces(StringBuilder stringBuilder)
         {
             if (sb.Length != 0)
             {

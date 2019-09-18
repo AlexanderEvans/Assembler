@@ -6,13 +6,26 @@ using System.IO;
 
 namespace Evans1
 {
-    /// <summary>
-    /// A wrapper for a SortedDictionary(BST ADT) that adds helper functions for parsing and setting values for 
-    /// the SymbolTable to be used by the assembler.
-    /// </summary>
+    //*********************************************************************
+    //*** NAME : Alex Evans
+    //*** CLASS : CSc 354 Intro to systems
+    //*** ASSIGNMENT : 1
+    //*** DUE DATE : 9/18/2019
+    //*** INSTRUCTOR : GAMRADT 
+    //*********************************************************************
+    //*** DESCRIPTION :   A wrapper for a SortedDictionary(BST ADT) that 
+    //***                   adds helper functions for parsing and setting 
+    //**                    values for the SymbolTable to be used by the 
+    //**                    assembler.
+    //*********************************************************************
     class SymbolTable
     {
-        //symbol value data
+        //*********************************************************************
+        //*** Struct : Symbol
+        //*********************************************************************
+        //*** DESCRIPTION :   This struct contains the Symbol data to be used
+        //***                   in the kvp as the value of the key pair
+        //*********************************************************************
         public struct Symbol
         {
             //given data from file
@@ -24,6 +37,15 @@ namespace Evans1
             public bool IFlag;
             public bool MFlag;
 
+            //************************************************************************
+            //***  FUNCTION Print 
+            //*** ********************************************************************
+            //***  DESCRIPTION  :  prints the current contents of the symbol 
+            //***  INPUT ARGS   :  N/A 
+            //***  OUTPUT ARGS :  N/A
+            //***  IN/OUT ARGS   :  N/A  
+            //***  RETURN :  N/A
+            //************************************************************************
             public void Print()
             {
                 Console.WriteLine(label + "\t" + RFlag + "\t" + value + "\t" + MFlag + "\t" + IFlag);
@@ -36,6 +58,15 @@ namespace Evans1
         /// </summary>
         SortedDictionary<string, Symbol> SymbolTableBST = new SortedDictionary<string, Symbol>();
 
+        //************************************************************************
+        //***  FUNCTION LoadSymbols 
+        //*** ********************************************************************
+        //***  DESCRIPTION  :  opens a file and populates SymbolTableBST
+        //***  INPUT ARGS   :  string filePath
+        //***  OUTPUT ARGS :  N/A
+        //***  IN/OUT ARGS   :  N/A  
+        //***  RETURN :  N/A 
+        //************************************************************************
         public void LoadSymbols(string filePath)
         {
             Symbol symbol = default;
@@ -165,8 +196,17 @@ namespace Evans1
             fileStream.Dispose();
         }
 
-        //Takes a string and searches for a symbol that fits that key
-        Symbol? SearchSymbol(string str)
+        //************************************************************************
+        //***  FUNCTION SearchSymbol 
+        //*** ********************************************************************
+        //***  DESCRIPTION  :  Takes a string and searches for a symbol 
+        //***                   that fits that key
+        //***  INPUT ARGS   :  string str
+        //***  OUTPUT ARGS :  N/A
+        //***  IN/OUT ARGS   :  N/A  
+        //***  RETURN :  Symbol? 
+        //************************************************************************
+        public Symbol? SearchSymbol(string str)
         {
             Symbol? tempN = null;
             Symbol temp;
@@ -177,7 +217,17 @@ namespace Evans1
             return tempN;
         }
 
-        //takes a file path and farses the file and searches the symboltable for the parsed lables, printing them to the console
+        //************************************************************************
+        //***  FUNCTION SearchSymbol 
+        //*** ********************************************************************
+        //***  DESCRIPTION  :  Takes a file path to parse and validate symbol 
+        //***                   labels which are then search for in the BST and 
+        //***                   the output is dumped to the console
+        //***  INPUT ARGS   :  string filePath
+        //***  OUTPUT ARGS :  N/A
+        //***  IN/OUT ARGS   :  N/A  
+        //***  RETURN :  N/A
+        //************************************************************************
         public void SearchSymbols(string filePath)
         {
             FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, FileOptions.SequentialScan);
@@ -236,7 +286,15 @@ namespace Evans1
 
         }
 
-        //prints the current contents of the symbol table
+        //************************************************************************
+        //***  FUNCTION Print 
+        //*** ********************************************************************
+        //***  DESCRIPTION  :  prints the current contents of the symbol table
+        //***  INPUT ARGS   :  N/A 
+        //***  OUTPUT ARGS :  N/A
+        //***  IN/OUT ARGS   :  N/A  
+        //***  RETURN :  N/A
+        //************************************************************************
         public void Print()
         {
             Console.WriteLine("Symbol\tRFlag\tValue \tMFlag \tIFlag");
