@@ -9,10 +9,13 @@ namespace Assembler
             Console.WriteLine("Hello World!");
             SymbolTable symbolTable = new SymbolTable();
             symbolTable.LoadSymbols("../../../SYMBOLS.DAT");
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine("Current symbol table values after loading:");
             symbolTable.Print();
             Console.WriteLine();
 
-            Console.WriteLine("Please enter a file path: ");
+            Console.WriteLine("Please enter the search file path: ");
             string filePath = Console.ReadLine();
         }
     }
