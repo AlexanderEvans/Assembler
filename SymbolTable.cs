@@ -237,6 +237,7 @@ namespace Assembler
         public void Print()
         {
             Console.WriteLine("Symbol\tRFlag\tValue \tMFlag \tIFlag");
+            Console.WriteLine("=====================================");
             foreach (KeyValuePair<string, Symbol> keyValuePair in SymbolTableBST)
             {
                 keyValuePair.Value.Print();
