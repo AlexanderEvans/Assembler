@@ -15,8 +15,20 @@ namespace Assembler
             symbolTable.Print();
             Console.WriteLine();
 
-            Console.WriteLine("Please enter the search file path: ");
-            string filePath = Console.ReadLine();
+
+            Console.WriteLine(args.Length);
+            foreach (string arg in args)
+                Console.WriteLine(arg);
+            string filePath;
+            if (args.Length==0)
+            {
+                Console.WriteLine("Please enter the search file path: ");
+                filePath = Console.ReadLine();
+            }
+            else
+            {
+                filePath = args[0];
+            }
         }
     }
 }
