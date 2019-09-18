@@ -57,7 +57,7 @@ namespace Assembler
                 currentLine = streamReader.ReadLine().Trim();
 
                 //check incorrect colon seperator count
-                if (currentLine.countStringCharachters(':') != 1)
+                if (currentLine.CountStringCharachters(':') != 1)
                 {
                     Console.WriteLine("Extra colon seperators in current line, skipping: \"" + currentLine + "\"\n");
                     discardLine = true;
