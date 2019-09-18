@@ -59,7 +59,7 @@ namespace Assembler
                 discardLine = false;
 
                 //get the line and trim whitespace
-                currentLine = streamReader.ReadLine().Trim();
+                currentLine = streamReader.ReadLine().CompactAndTrimWhitespaces();
 
                 //check incorrect colon seperator count
                 if (currentLine.CountStringCharachters(':') != 1)
