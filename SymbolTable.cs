@@ -16,7 +16,7 @@ namespace Assembler
         public struct Symbol
         {
             //given data from file
-            public char[] label;//the symbols's name/Identifier string/Label
+            public string label;//the symbols's name/Identifier string/Label
             public bool RFlag;
             public int value;
 
@@ -29,12 +29,13 @@ namespace Assembler
         /// Sorted dictionay is implemented with a Binary Search Tree that searches/ 
         /// inserts in (O)log(n) time.
         /// </summary>
-        SortedDictionary<char[], Symbol> SymbolTableBST = new SortedDictionary<char[], Symbol>();
+        SortedDictionary<string, Symbol> SymbolTableBST = new SortedDictionary<string, Symbol>();
 
         void LoadSymbols(string filePath)
         {
             Symbol symbol = default;
-            symbol.label = new char[7];
+            symbol.label = "";
+            char[] tmpLabel = new char[7];
             FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, FileOptions.SequentialScan);
             StreamReader streamReader = new StreamReader(fileStream);
 
@@ -127,9 +128,10 @@ namespace Assembler
                             int symbolLabelIndex = 0;
                             for (symbolLabelIndex = 0; symbolLabelIndex < 6 && symbolLabelIndex < tempStr.Length; symbolLabelIndex++)
                             {
-                                symbol.label[symbolLabelIndex] = tempStr[symbolLabelIndex];
+                                tmpLabel[symbolLabelIndex] = tempStr[symbolLabelIndex];
                             }
-                            symbol.label[symbolLabelIndex] = '\0';
+                            tmpLabel[symbolLabelIndex] = '\0';
+                            symbol.label = new string(tmpLabel);
                             symbol.MFlag = false;
                             symbol.IFlag = true;
 
