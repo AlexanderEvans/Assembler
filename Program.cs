@@ -24,28 +24,28 @@ namespace Evans1
         //*************************************************************************
         static void Main(string[] args)
         {
-            Console.WriteLine("Loading symbols...");
+            Debug.WriteLine("Loading symbols...");
             SymbolTable symbolTable = new SymbolTable();
             symbolTable.LoadSymbols("../../../SYMBOLS.DAT");
-            Console.WriteLine();
-            Console.WriteLine();
-            Console.WriteLine("Current symbol table values after loading:");
+            Debug.NewLine();
+            Debug.NewLine();
+            Debug.WriteLine("Current symbol table values after loading:");
             symbolTable.Print();
-            Console.WriteLine();
-            Console.WriteLine();
+            Debug.NewLine();
+            Debug.NewLine();
 
             string filePath;
             if (args.Length==0)
             {
-                Console.WriteLine("Please enter the search file name: ");
+                Debug.WriteLine("Please enter the search file name: ");
                 filePath = Console.ReadLine();
             }
             else
             {
                 filePath = args[0];
             }
-            Console.WriteLine();
-            Console.WriteLine();
+            Debug.NewLine();
+            Debug.NewLine();
             symbolTable.SearchSymbols("../../../" + filePath);
         }
     }
