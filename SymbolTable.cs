@@ -108,21 +108,6 @@ namespace Evans1
                     
                     if(!discardLine)
                     {
-                    //validate RFlag
-                    rFlag = rflagAndValueStrings[0].Trim();
-                    if (rFlag == "true" || rFlag == "1")
-                    {
-                        symbol.RFlag = true;
-                    }
-                    else if (rFlag == "false" || rFlag == "0")
-                    {
-                        symbol.RFlag = true;
-                    }
-                    else
-                    {
-                        discardLine = true;
-                        Console.WriteLine("Error Adding Symbol: invalid RFlag value(" + rFlag + "), skipping: \"" + currentLine + "\"");
-                    }
                         rflagAndValueStrings = symbolSubstrings[1].Trim().Split(' ');
 
                         //validate RFlag
@@ -175,6 +160,25 @@ namespace Evans1
             fileStream.Dispose();
         }
 
+        bool testAndSetRFlag(string rFlagIn, out bool rFlagOut, string currentLine, string errorPrefix = "")
+        {
+            bool discardLine = false;
+            if (rFlagIn == "true" || rFlagIn == "1")
+            {
+                rFlagOut = true;
+            }
+            else if (rFlagIn == "false" || rFlagIn == "0")
+            {
+                rFlagOut = false;
+            }
+            else
+            {
+                rFlagOut = default;
+                discardLine = true;
+                Debug.LogError("Invalid RFlag value(" + rFlagIn + "), skipping: \"" + currentLine + "\"", errorPrefix);
+            }
+            return discardLine;
+        }
 
         bool Validatelabel(string label, string currentLine, string errorPrefix="")
         {
