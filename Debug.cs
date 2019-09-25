@@ -8,6 +8,14 @@ namespace Evans1
     {
         private static int count = 0;
         public static int LinesBeforeHolding = 20;
+        public enum outputOptions
+        {
+            ERR     =   0b1000,
+            WARN    =   0b100,
+            DETAIL  =   0b10,
+            INFO    =   0b1
+        }
+        public static int outputMask = (int)(outputOptions.ERR | outputOptions.WARN | outputOptions.INFO);
         public static void Write(string msg)
         {
             if(msg.CountStringCharachters('\n')>0)
@@ -58,34 +66,50 @@ namespace Evans1
 
         public static void LogInfo(string msg, string loc="")
         {
-            if(loc=="")
-                WriteLine("Info: " + msg);
-            else
-                WriteLine("Info("+loc+"): " + msg);
+            int flags = (int)outputOptions.INFO;
+            if((flags & outputMask)>0)
+            {
+                if (loc == "")
+                    WriteLine("Info: " + msg);
+                else
+                    WriteLine("Info(" + loc + "): " + msg);
+            }
         }
         public static void LogDetailedInfo(string msg, string loc="")
         {
-            if (loc == "")
-                WriteLine("Detail: " + msg);
-            else
-                WriteLine("Detail(" + loc + "): " + msg);
+            int flags = (int)outputOptions.DETAIL;
+            if ((flags & outputMask) > 0)
+            {
+                if (loc == "")
+                    WriteLine("Detail: " + msg);
+                else
+                    WriteLine("Detail(" + loc + "): " + msg);
+            }
         }
         public static void LogWarn(string msg, string loc="")
         {
-            if (loc == "")
-                WriteLine("Warning: " + msg);
-            else
-                WriteLine("Warning(" + loc + "): " + msg);
+            int flags = (int)outputOptions.WARN;
+            if ((flags & outputMask) > 0)
+            {
+                if (loc == "")
+                    WriteLine("Warning: " + msg);
+                else
+                    WriteLine("Warning(" + loc + "): " + msg);
+            }
         }
 
 
 
         public static void LogError(string msg, string loc="")
         {
-            if (loc == "")
-                WriteLine("Error: " + msg);
-            else
-                WriteLine("Error(" + loc + "): " + msg);
+            int flags = (int)outputOptions.ERR;
+            if ((flags & outputMask) > 0)
+            {
+                if (loc == "")
+                    WriteLine("Error: " + msg);
+                else
+                    WriteLine("Error(" + loc + "): " + msg);
+            }
         }
 
     }
