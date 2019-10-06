@@ -72,7 +72,7 @@ namespace Evans1
 
                     //validate Label
                     string label = symbolSubstrings[0].Trim();
-                    discardLine = Validatelabel(label, currentLine, "Adding Symbol");
+                    discardLine = !ValidateLabel(label, currentLine, "Adding Symbol");
                     
                     if(!discardLine)
                     {
@@ -80,7 +80,7 @@ namespace Evans1
 
                         //validate RFlag
                         rFlag = rflagAndValueStrings[0].Trim();
-                        discardLine = testAndSetRFlag(rFlag, out symbol.RFlag, currentLine, "Adding Symbol");
+                        discardLine = TestAndSetRFlag(rFlag, out symbol.RFlag, currentLine, "Adding Symbol");
                         if (!discardLine)
                         {
                             string value = rflagAndValueStrings[1].Trim();
@@ -128,7 +128,7 @@ namespace Evans1
             fileStream.Dispose();
         }
 
-        bool testAndSetRFlag(string rFlagIn, out bool rFlagOut, string currentLine, string errorPrefix = "")
+        bool TestAndSetRFlag(string rFlagIn, out bool rFlagOut, string currentLine, string errorPrefix = "")
         {
             bool discardLine = false;
             if (rFlagIn == "true" || rFlagIn == "1")
@@ -148,36 +148,36 @@ namespace Evans1
             return discardLine;
         }
 
-        bool Validatelabel(string label, string currentLine, string errorPrefix="")
+        public bool ValidateLabel(string label, string currentLine, string errorPrefix="")
         {
-            bool discardLine = false;
+            bool isValid = true;
             if (label.Length > 12)
             {
                 Debug.LogError("Symbol Label(" + label + ") is too long, \n\tmust be less than 12 charachters in length, skipping: \"" + currentLine + "\"", errorPrefix);
-                discardLine = true;
+                isValid = false;
             }
             else if (label.Length == 0)
             {
                 Debug.LogError("Symbol Label(" + label + ") is empty, skipping: \"" + currentLine + "\"", errorPrefix);
-                discardLine = true;
+                isValid = false;
             }
             else if (!char.IsLetter(label[0]))
             {
                 Debug.LogError("Symbol Label(" + label + ") does not start with a letter(" + label[0] + "), \n\tskipping: \"" + currentLine + "\"", errorPrefix);
-                discardLine = true;
+                isValid = false;
             }
             else//only continue validation on short Label that fit in the 12 chars
             {
-                for (int i = 0; i < label.Length && discardLine == false; i++)
+                for (int i = 0; i < label.Length && isValid == false; i++)
                 {
                     if (!char.IsLetterOrDigit(label[i]))
                     {
                         Debug.LogError("Invalid special charachters('" + label[i] + "') detected in Symbol Label(" + label + "), \n\tskipping: \"" + currentLine + "\"", errorPrefix);
-                        discardLine = true;
+                        isValid = false;
                     }
                 }
             }
-            return discardLine;
+            return isValid;
         }
 
         //************************************************************************
@@ -222,7 +222,7 @@ namespace Evans1
                 //get the line and trim whitespace
                 string currentLine = streamReader.ReadLine().CompactAndTrimWhitespaces();
 
-                if (!Validatelabel(currentLine, currentLine, "Seeking Symbol"))
+                if (ValidateLabel(currentLine, currentLine, "Seeking Symbol"))
                 {
                     StringBuilder stringBuilder = new StringBuilder();
                     for (int i = 0; i < currentLine.Length && i < 6; i++)
