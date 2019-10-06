@@ -6,17 +6,22 @@ namespace Evans1
 {
     class ExpresionHandler
     {
-        static bool ResolveExpresion(SymbolTable symbolTable, string expresion, string currentLine, out Globals.Symbol? symbol)
+        static bool ResolveExpresion(SymbolTable symbolTable, string expresion, string currentLine, out Globals.Symbol? symbol, out Globals.AddressingMode addressingMode)
         {
+            addressingMode = Globals.AddressingMode.SIMPLE_DIRECT;
             symbol = null;
             int arithmaticOperatorCount = expresion.CountStringCharachters(out List<char> found, '+', '-');
             if (arithmaticOperatorCount <= 1)
             {
                 if(found.Contains('+'))
                 {
-
+                    
                 }
                 else if(found.Contains('-'))
+                {
+
+                }
+                else
                 {
 
                 }
