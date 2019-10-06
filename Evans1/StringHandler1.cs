@@ -40,6 +40,35 @@ namespace Evans1
             }
             return count;
         }
+        //************************************************************************
+        //***  FUNCTION CountStringCharachters 
+        //*** ********************************************************************
+        //***  DESCRIPTION  :  Counts the occurances of charachters in a string
+        //***  INPUT ARGS   :  this string str, char myChar
+        //***  OUTPUT ARGS :  N/A
+        //***  IN/OUT ARGS   :  N/A  
+        //***  RETURN :  int count
+        //************************************************************************
+        public static int CountStringCharachters(this string str, out List<char> found, params char[] myChars)
+        {
+            int count = 0;
+            found = new List<char>();
+            foreach (char c in str)
+            {
+                foreach (char seperator in myChars)
+                {
+                    if (c == seperator)
+                    {
+                        count++;
+                        if (found.Contains(c) != true)
+                            found.Add(c);
+                    }
+                }
+            }
+
+            return count;
+        }
+
         //*************************************************************************
         //***  FUNCTION CountStringCharachters 
         //*** *********************************************************************
