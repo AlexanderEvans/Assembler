@@ -14,7 +14,7 @@ namespace Evans1
     //*** DESCRIPTION :   This class adds string extensions for string 
     //***                 parsing
     //********************************************************************
-    public static class StringExtensions
+    public static class StringHandler
     {
         //************************************************************************
         //***  FUNCTION CountStringCharachters 
