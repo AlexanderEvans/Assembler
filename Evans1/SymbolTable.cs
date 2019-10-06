@@ -20,43 +20,11 @@ namespace Evans1
     //*********************************************************************
     class SymbolTable
     {
-        //*********************************************************************
-        //*** Struct : Symbol
-        //*********************************************************************
-        //*** DESCRIPTION :   This struct contains the Symbol data to be used
-        //***                   in the kvp as the value of the key pair
-        //*********************************************************************
-        public struct Symbol
-        {
-            //given data from file
-            public string label;//the symbols's name/Identifier string/Label
-            public bool RFlag;
-            public int value;
-
-            //deduced data
-            public bool IFlag;
-            public bool MFlag;
-
-            //************************************************************************
-            //***  FUNCTION Print 
-            //*** ********************************************************************
-            //***  DESCRIPTION  :  prints the current contents of the symbol 
-            //***  INPUT ARGS   :  N/A 
-            //***  OUTPUT ARGS :  N/A
-            //***  IN/OUT ARGS   :  N/A  
-            //***  RETURN :  N/A
-            //************************************************************************
-            public void Print()
-            {
-                Debug.WriteLine(label + "\t" + RFlag + "\t" + value + "\t" + MFlag + "\t" + IFlag);
-            }
-        }
-
         /// <summary>
         /// Sorted dictionay is implemented with a Binary Search Tree that searches/ 
         /// inserts in (O)log(n) time.
         /// </summary>
-        SortedDictionary<string, Symbol> SymbolTableBST = new SortedDictionary<string, Symbol>();
+        SortedDictionary<string, Globals.Symbol> SymbolTableBST = new SortedDictionary<string, Globals.Symbol>();
 
         //************************************************************************
         //***  FUNCTION LoadSymbols 
@@ -69,7 +37,7 @@ namespace Evans1
         //************************************************************************
         public void LoadSymbols(string filePath)
         {
-            Symbol symbol = default;
+            Globals.Symbol symbol = default;
             symbol.label = "";
             char[] tmpLabel = new char[7];
             FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, FileOptions.SequentialScan);
@@ -137,7 +105,7 @@ namespace Evans1
                                 if (SymbolTableBST.ContainsKey(symbol.label))
                                 {
                                     Debug.LogError("Symbol with same Label('" + symbol.label + "') already exists!  Setting MFlag and \n\tskipping: \"" + currentLine + "\"", "Adding Symbol");
-                                    Symbol sym = SymbolTableBST.GetValueOrDefault(symbol.label);
+                                    Globals.Symbol sym = SymbolTableBST.GetValueOrDefault(symbol.label);
                                     if (sym.MFlag == false)
                                     {
                                         sym.MFlag = true;
@@ -222,10 +190,10 @@ namespace Evans1
         //***  IN/OUT ARGS   :  N/A  
         //***  RETURN :  Symbol? 
         //************************************************************************
-        public Symbol? SearchSymbol(string str)
+        public Globals.Symbol? SearchSymbol(string str)
         {
-            Symbol? tempN = null;
-            Symbol temp;
+            Globals.Symbol? tempN = null;
+            Globals.Symbol temp;
             if(SymbolTableBST.TryGetValue(str, out temp))
             {
                 tempN = temp;
@@ -259,7 +227,7 @@ namespace Evans1
                     StringBuilder stringBuilder = new StringBuilder();
                     for (int i = 0; i < currentLine.Length && i < 6; i++)
                         stringBuilder.Append(currentLine[i]);
-                    Symbol? temp = SearchSymbol(stringBuilder.ToString());
+                    Globals.Symbol? temp = SearchSymbol(stringBuilder.ToString());
                     if (temp.HasValue)
                     {
                         Debug.Write("Found symbol: ");
@@ -291,7 +259,7 @@ namespace Evans1
         {
             Debug.WriteLine("Symbol\tRFlag\tValue \tMFlag \tIFlag");
             Debug.WriteLine("=====================================");
-            foreach (KeyValuePair<string, Symbol> keyValuePair in SymbolTableBST)
+            foreach (KeyValuePair<string, Globals.Symbol> keyValuePair in SymbolTableBST)
             {
                 keyValuePair.Value.Print();
             }
