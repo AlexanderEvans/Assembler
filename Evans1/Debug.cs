@@ -8,12 +8,12 @@ namespace Evans1
     {
         private static int count = 0;
         public static int LinesBeforeHolding = 20;
-        public enum outputOptions
+        public enum outputOptions : byte
         {
             ERR     =   0b1000,
             WARN    =   0b100,
-            DETAIL  =   0b10,
-            INFO    =   0b1
+            INFO    =   0b10,
+            DETAIL  =   0b1,
         }
         public static int outputMask = (int)(outputOptions.ERR | outputOptions.WARN | outputOptions.INFO);
         public static void Write(string msg)
