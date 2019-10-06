@@ -19,19 +19,24 @@ namespace Evans1
         //************************************************************************
         //***  FUNCTION CountStringCharachters 
         //*** ********************************************************************
-        //***  DESCRIPTION  :  Counts the occurances of a charachter in a string
+        //***  DESCRIPTION  :  Counts the occurances of charachters in a string
         //***  INPUT ARGS   :  this string str, char myChar
         //***  OUTPUT ARGS :  N/A
         //***  IN/OUT ARGS   :  N/A  
         //***  RETURN :  int count
         //************************************************************************
-        public static int CountStringCharachters(this string str, char myChar)
+        public static int CountStringCharachters(this string str, params char[] myChars)
         {
             int count = 0;
             foreach (char c in str)
             {
-                if (c == myChar)
-                    count++;
+                foreach (char seperator in myChars)
+                {
+                    if (c == seperator)
+                    {
+                        count++;
+                    }
+                }
             }
             return count;
         }
