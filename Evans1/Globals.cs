@@ -38,4 +38,25 @@ namespace Evans1
             }
         }
     }
+    public class AsciiComparer : Comparer<string> 
+    {
+        public override int Compare(string x, string y)
+        {
+            int rtnVal = string.CompareOrdinal(x, y);
+            if (x == y)
+                rtnVal = 0;
+            else if (rtnVal > 0)
+            {
+                rtnVal = 1;
+            }
+            else if (rtnVal < 0)
+            {
+                rtnVal = -1;
+            }
+            return rtnVal;
+        }
+        public override bool Equals(object obj) => base.Equals(obj);
+        public override string ToString() => base.ToString();
+        public override int GetHashCode() => base.GetHashCode();
+    }
 }

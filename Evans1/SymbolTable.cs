@@ -24,7 +24,7 @@ namespace Evans1
         /// Sorted dictionay is implemented with a Binary Search Tree that searches/ 
         /// inserts in (O)log(n) time.
         /// </summary>
-        SortedDictionary<string, Globals.Symbol> SymbolTableBST = new SortedDictionary<string, Globals.Symbol>(StringComparer.Ordinal);
+        SortedDictionary<string, Globals.Symbol> SymbolTableBST = new SortedDictionary<string, Globals.Symbol>(new AsciiComparer());
 
         //************************************************************************
         //***  FUNCTION LoadSymbols 
@@ -194,7 +194,7 @@ namespace Evans1
         {
             Globals.Symbol? tempN = null;
             Globals.Symbol temp;
-            if(SymbolTableBST.TryGetValue(str, out temp))
+            if (SymbolTableBST.TryGetValue(str, out temp))
             {
                 tempN = temp;
             }
