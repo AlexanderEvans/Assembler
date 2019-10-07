@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
-
+using System.Linq;
 
 namespace Evans1
 {
@@ -73,8 +73,8 @@ namespace Evans1
                     //validate Label
                     string label = symbolSubstrings[0].Trim();
                     discardLine = !ValidateLabel(label, currentLine, "Adding Symbol");
-                    
-                    if(!discardLine)
+
+                    if (!discardLine)
                     {
                         rflagAndValueStrings = symbolSubstrings[1].Trim().Split(' ');
 
@@ -98,10 +98,14 @@ namespace Evans1
                                     tmpLabel[symbolLabelIndex] = label[symbolLabelIndex];
                                 }
                                 tmpLabel[symbolLabelIndex] = '\0';
-                                symbol.label = new string(tmpLabel);
+                                StringBuilder sb = new StringBuilder("");
+                                foreach (char c in tmpLabel.TakeWhile(c => c != '\0'))
+                                {
+                                    sb.Append(c);
+                                }
+                                symbol.label = sb.ToString().Trim();
                                 symbol.MFlag = false;
                                 symbol.IFlag = true;
-
                                 if (SymbolTableBST.ContainsKey(symbol.label))
                                 {
                                     Debug.LogError("Symbol with same Label('" + symbol.label + "') already exists!  Setting MFlag and \n\tskipping: \"" + currentLine + "\"", "Adding Symbol");
