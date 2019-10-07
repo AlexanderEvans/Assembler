@@ -15,5 +15,9 @@ namespace Evans1
         }
         int count = 0;
         LinkedList<LiteralValue> literalTable = new LinkedList<LiteralValue>();
+
+        bool add(string literal)
+        {
+        }
     }
 }
