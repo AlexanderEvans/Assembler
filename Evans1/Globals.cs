@@ -10,7 +10,8 @@ namespace Evans1
         {
             IMMEDIATE = 1,
             INDIRECT = 2,
-            SIMPLE_DIRECT = 3 
+            SIMPLE_DIRECT = 3,
+            ERROR,
         };
 
         //*********************************************************************
