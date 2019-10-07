@@ -24,12 +24,26 @@ namespace Evans1
                 else
                 {
 
+        bool ParseTerm(SymbolTable symbolTable, string term, out Globals.Symbol? sym, string currentLine)
+        {
+            if (char.IsDigit(term[0]))
+            {
+                sym = null;
+                if (ParseNum(term, out Globals.Symbol? tmp, currentLine) == true)
+                {
+                    sym = tmp;
                 }
             }
             else
             {
-                Debug.LogError("Invalid expresion.  There is more than one arithmatic operator indicating 3 or more terms.", "Resolving Expresion");
+                sym = symbolTable.SearchSymbol(term.CompactAndTrimWhitespaces());
             }
+            bool rtnVal = true;
+            if (sym == null)
+                rtnVal = false;
+            return rtnVal;
+        }
+
         bool ParseNum(string digits, out Globals.Symbol? sym, string currentLine="")
         {
             bool rtnVal = true;
