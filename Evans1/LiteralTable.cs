@@ -18,6 +18,7 @@ namespace Evans1
 
         bool add(string literal)
         {
+            bool rtnVal = true;
         }
     }
 }
