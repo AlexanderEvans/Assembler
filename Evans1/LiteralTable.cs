@@ -20,6 +20,7 @@ namespace Evans1
         {
             bool rtnVal = true;
             LiteralValue literalValue = default;
+            literal = literal.ToUpper().CompactAndTrimWhitespaces();
         }
     }
 }
