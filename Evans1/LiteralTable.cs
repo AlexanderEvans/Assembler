@@ -21,6 +21,31 @@ namespace Evans1
             bool rtnVal = true;
             LiteralValue literalValue = default;
             literal = literal.ToUpper().CompactAndTrimWhitespaces();
+            literalValue.label=literal;
+            if (literal[1] == 'X')
+                literalValue.isChar = false;
+            if (literal[1] == 'C')
+                literalValue.isChar = true;
+            else
+            {
+                Debug.LogError("Invalid literal type, please indicate hex\'X\' or Char\'C\'", "Adding Literal");
+                rtnVal = false;
+            }
+
+            if(rtnVal==true)
+            {
+                if(literalValue.label[2] != '\'' || '\'' != literalValue.label[literalValue.label.Length-1])
+                {
+                    Debug.LogError("Invalid enclosing symbols, please surround your literal with single quotes '\''", "Adding Literal");
+                    rtnVal = false;
+                }
+            }
+
+            if (rtnVal == true)
+            {
+                
+            }
+
         }
     }
 }
