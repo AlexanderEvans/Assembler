@@ -13,5 +13,7 @@ namespace Evans1
             public bool isChar;
             public int address;
         }
+        int count = 0;
+        LinkedList<LiteralValue> literalTable = new LinkedList<LiteralValue>();
     }
 }
