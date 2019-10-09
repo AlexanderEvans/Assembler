@@ -6,14 +6,6 @@ namespace Evans1
 {
     class Globals
     {
-        public enum AddressingMode : byte 
-        {
-            IMMEDIATE = 1,
-            INDIRECT = 2,
-            SIMPLE_DIRECT = 3,
-            ERROR,
-        };
-
         //*********************************************************************
         //*** Struct : Symbol
         //*********************************************************************
