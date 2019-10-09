@@ -44,24 +44,27 @@ namespace Evans1
             return rtnVal;
         }
 
-        bool ParseNum(string digits, out Globals.Symbol? sym, string currentLine="")
+        static bool ParseNum(string digits, out Globals.Symbol? sym, string currentLine="")
         {
-            bool rtnVal = true;
             Globals.Symbol tmp = default;
-            tmp.label = digits;
-            tmp.RFlag = false;
-            tmp.MFlag = false;
-            tmp.IFlag = true;
-            if (int.TryParse(digits, out tmp.value) != true)
-            {
-                rtnVal = false;
-                Debug.LogError("Attempted to resolve invalid expresion!\n\tArithmitic must be performed on exactly 2 terms, skipping: " + currentLine, "Resolving Expresion");
-            }
+            bool rtnVal = true;
 
-            if (rtnVal==true)
+            if (int.TryParse(digits, out tmp.value) == true)
+            {
+                tmp.label = digits;
+                tmp.RFlag = false;
+                tmp.MFlag = false;
+                tmp.IFlag = true;
+                tmp.NFlag = false;
+                tmp.XFlag = false;
                 sym = tmp;
+            }
             else
+            {
+                Debug.LogError("Attempted to resolve invalid integer!\n\tUnable to parse integer value, skipping: " + currentLine, "Resolving Expresion");
                 sym = null;
+                rtnVal = false;
+            }
             return rtnVal;
         }
     }
