@@ -3,10 +3,31 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 
+//*******************************************************************
+//*** NAME : Alex Evans
+//*** CLASS : CSc 354 Intro to systems
+//*** ASSIGNMENT : 2
+//*** DUE DATE : 10/9/2019
+//*** INSTRUCTOR : GAMRADT 
+//********************************************************************
+//*** DESCRIPTION :   This class adds a literal table
+//********************************************************************
+
 namespace Evans1
 {
+    //*********************************************************************
+    //*** class : LiteralTable
+    //*********************************************************************
+    //*** DESCRIPTION :   Stores a single literal's information using a
+    //***                   Linked list
+    //*********************************************************************
     class LiteralTable
     {
+        //*********************************************************************
+        //*** struct : LiteralValue
+        //*********************************************************************
+        //*** DESCRIPTION :   Stores a single literal's information 
+        //*********************************************************************
         public struct LiteralValue
         {
             public string label;
@@ -17,6 +38,15 @@ namespace Evans1
         int count = 0;
         LinkedList<LiteralValue> literalTable = new LinkedList<LiteralValue>();
 
+        //************************************************************************
+        //***  FUNCTION PrintTable 
+        //*** ********************************************************************
+        //***  DESCRIPTION  :  prints the current contents of the literal table
+        //***  INPUT ARGS   :  N/A 
+        //***  OUTPUT ARGS :  N/A
+        //***  IN/OUT ARGS   :  N/A  
+        //***  RETURN :  N/A
+        //************************************************************************
         public void PrintTable()
         {
             Debug.WriteLine("NAME\t\tVALUE\t\tLENGTH\tADDRESS");
@@ -40,6 +70,15 @@ namespace Evans1
             }
         }
 
+        //************************************************************************
+        //***  FUNCTION add 
+        //*** ********************************************************************
+        //***  DESCRIPTION  :  add a literal to the literal table
+        //***  INPUT ARGS   :  string literal
+        //***  OUTPUT ARGS :  N/A
+        //***  IN/OUT ARGS   :  N/A  
+        //***  RETURN :  bool rtnVal
+        //************************************************************************
         public bool add(string literal)
         {
             bool rtnVal = true;
@@ -118,22 +157,15 @@ namespace Evans1
             return rtnVal;
         }
 
-        bool validateHex(char[] charArr)
-        {
-            for(int i = 0; i<charArr.Length;i++)
-            {
-                charArr[i] = char.ToUpper(charArr[i]);
-            }
-            bool isHex = true;
-            foreach (char c in charArr.TakeWhile(c => { return isHex; }))
-            {
-                if (!(char.IsDigit(c) || (((int)c) >= 'A' && ((int)c) <= 'F')))
-                {
-                    isHex = false;
-                }
-            }
-            return isHex;
-        }
+        //************************************************************************
+        //***  FUNCTION validateHex 
+        //*** ********************************************************************
+        //***  DESCRIPTION  :  Ensures all chars of a string are hex digists
+        //***  INPUT ARGS   :  string charStr
+        //***  OUTPUT ARGS :  N/A
+        //***  IN/OUT ARGS   :  N/A  
+        //***  RETURN :  bool isHex
+        //************************************************************************
         bool validateHex(string charStr)
         {
             charStr = charStr.ToUpper();
