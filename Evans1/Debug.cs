@@ -15,7 +15,16 @@ namespace Evans1
             INFO    =   0b10,
             DETAIL  =   0b1,
         }
-        public static int outputMask = (int)(outputOptions.ERR | outputOptions.WARN | outputOptions.INFO);
+        public static int outputMask = (int)(outputOptions.ERR | outputOptions.WARN);
+
+        public static void HoldOutput()
+        {
+            count = 1;
+            Console.WriteLine("Holding Input: Press any key to continue...");
+            Console.ReadKey();
+            Console.WriteLine();
+        }
+
         public static void Write(string msg)
         {
             if(msg.CountStringCharachters('\n')>0)
@@ -57,7 +66,7 @@ namespace Evans1
             count++;
             if (count % LinesBeforeHolding == 0)
             {
-                Console.WriteLine("Holding Input: Press any key to continue...");
+                Console.WriteLine("\nHolding Input: Press any key to continue...");
                 Console.ReadKey();
                 Console.WriteLine();
             }
