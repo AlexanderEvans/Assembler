@@ -26,9 +26,11 @@ namespace Evans1
         {
             Debug.WriteLine("Loading symbols...");
             SymbolTable symbolTable = new SymbolTable();
+            LiteralTable literalTable = new LiteralTable();
             symbolTable.LoadSymbols("../../../SYMBOLS.DAT");
             Debug.NewLine();
             Debug.NewLine();
+            Debug.HoldOutput();
             Debug.WriteLine("Current symbol table values after loading:");
             symbolTable.Print();
             Debug.NewLine();
@@ -44,9 +46,13 @@ namespace Evans1
             {
                 filePath = args[0];
             }
+            Debug.HoldOutput();
             Debug.NewLine();
             Debug.NewLine();
-            symbolTable.SearchSymbols("../../../" + filePath);
+            //symbolTable.SearchSymbols("../../../" + filePath);
+            ExpresionHandler.ParseExpresionFile(symbolTable, literalTable, "../../../" + filePath);
+            Debug.HoldOutput();
+            literalTable.PrintTable();
         }
     }
 }
