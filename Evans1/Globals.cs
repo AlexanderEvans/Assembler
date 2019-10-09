@@ -46,6 +46,25 @@ namespace Evans1
             }
         }
     }
+
+    struct BoolConverter
+    {
+        bool myBool;
+        public static implicit operator BoolConverter(bool first)
+        {
+            BoolConverter boolConverter=default;
+            boolConverter.myBool = first;
+            return boolConverter;
+        }
+        public static implicit operator int(BoolConverter first)
+        {
+            if (first.myBool)
+                return 1;
+            else
+                return 0;
+        }
+    }
+
     public class AsciiComparer : Comparer<string> 
     {
         public override int Compare(string x, string y)
