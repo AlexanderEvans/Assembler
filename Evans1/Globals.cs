@@ -44,6 +44,80 @@ namespace Evans1
             {
                 Debug.WriteLine(label + "\t" + RFlag + "\t" + value + "\t" + MFlag + "\t" + IFlag);
             }
+            static public Symbol? operator +(Symbol first, Symbol second)
+            {
+                Symbol? rtnVal = null;
+                Symbol tmp = default;
+                tmp.label = "";
+                tmp.NFlag = first.NFlag | second.NFlag;
+                tmp.IFlag = true;
+                tmp.XFlag = false;
+                tmp.MFlag = first.MFlag | second.MFlag;
+                tmp.value = first.value + second.value;
+                int rVal = (((int)(BoolConverter)first.RFlag) << 1) + ((int)(BoolConverter)second.RFlag);
+                switch (rVal)
+                {
+                    case 0b00:
+                        tmp.RFlag = false;
+                        rtnVal = tmp;
+                        break;
+                    case 0b01:
+                        tmp.RFlag = true;
+                        rtnVal = tmp;
+                        break;
+                    case 0b10:
+                        tmp.RFlag = true;
+                        rtnVal = tmp;
+                        break;
+                    case 0b11:
+                        //do nothing and return null
+                        break;
+                }
+                return rtnVal;
+            }
+            static public Symbol? operator -(Symbol first, Symbol second)
+            {
+                Symbol? rtnVal = null;
+                Symbol tmp = default;
+                tmp.label = "";
+                tmp.NFlag = first.NFlag | second.NFlag;
+                tmp.IFlag = true;
+                tmp.XFlag = false;
+                tmp.MFlag = first.MFlag | second.MFlag;
+                tmp.value = first.value - second.value;
+                int rVal = (((int)(BoolConverter)first.RFlag) << 1) + ((int)(BoolConverter)second.RFlag);
+                switch (rVal)
+                {
+                    case 0b00:
+                        tmp.RFlag = false;
+                        rtnVal = tmp;
+                        break;
+                    case 0b01:
+                        //do nothing and return null
+                        break;
+                    case 0b10:
+                        tmp.RFlag = true;
+                        rtnVal = tmp;
+                        break;
+                    case 0b11:
+                        tmp.RFlag = false;
+                        rtnVal = tmp;
+                        break;
+                }
+                return rtnVal;
+            }
+        }
+
+        public static string CharArrToHexStr(char[] charArr)
+        {
+            StringBuilder stringBuilder = new StringBuilder(charArr.Length * 2);
+            string HexDigits = "0123456789ABCDEF";
+            foreach (char c in charArr)
+            {
+                stringBuilder.Append(HexDigits[((byte)c) >> 4]);
+                stringBuilder.Append(HexDigits[((byte)c) & 0xF]);
+            }
+            return stringBuilder.ToString();
         }
     }
 
