@@ -31,6 +31,8 @@ namespace Evans1
             public bool IFlag;
             public bool MFlag;
 
+            public bool NFlag;
+            public bool XFlag;
             //************************************************************************
             //***  FUNCTION Print 
             //*** ********************************************************************
