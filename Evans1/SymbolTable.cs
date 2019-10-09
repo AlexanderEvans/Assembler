@@ -39,9 +39,10 @@ namespace Evans1
         {
             Globals.Symbol symbol = default;
             symbol.label = "";
+            symbol.IFlag = true;
+            symbol.NFlag = true;
+            symbol.XFlag = false;
             char[] tmpLabel = new char[7];
-            FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, FileOptions.SequentialScan);
-            StreamReader streamReader = new StreamReader(fileStream);
 
             //discard line flag
             bool discardLine;
@@ -52,84 +53,107 @@ namespace Evans1
             string[] rflagAndValueStrings;
             string rFlag;
 
-            while (!streamReader.EndOfStream)
+            try
             {
-                //discard line flag
-                discardLine = false;
-
-                //get the line and trim whitespace
-                currentLine = streamReader.ReadLine().CompactAndTrimWhitespaces();
-
-                //check incorrect colon seperator count
-                if (currentLine.CountStringCharachters(':') != 1)
+                using (FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, FileOptions.SequentialScan))
                 {
-                    Debug.LogError("Extra colon seperators in current line, skipping: \"" + currentLine + "\"", "Adding Symbol");
-                    discardLine = true;
-                }
-                if (!discardLine)
-                {
-                    string[] symbolSubstrings = currentLine.Split(':');
 
-                    //validate Label
-                    string label = symbolSubstrings[0].Trim();
-                    discardLine = !ValidateLabel(label, currentLine, "Adding Symbol");
-
-                    if (!discardLine)
+                    try
                     {
-                        rflagAndValueStrings = symbolSubstrings[1].Trim().Split(' ');
-
-                        //validate RFlag
-                        rFlag = rflagAndValueStrings[0].Trim();
-                        discardLine = TestAndSetRFlag(rFlag, out symbol.RFlag, currentLine, "Adding Symbol");
-                        if (!discardLine)
+                        using (StreamReader streamReader = new StreamReader(fileStream))
                         {
-                            string value = rflagAndValueStrings[1].Trim();
-                            if (!int.TryParse(value, out symbol.value) || value[0] == '+')
+                            while (!streamReader.EndOfStream)
                             {
-                                discardLine = true;
-                                Debug.LogError("Invalid integer value(" + value + "), skipping: \"" + currentLine + "\"", "Adding Symbol");
-                            }
-                            if (!discardLine)
-                            {
-                                //parse data into Symbol struct
-                                int symbolLabelIndex = 0;
-                                for (symbolLabelIndex = 0; symbolLabelIndex < 6 && symbolLabelIndex < label.Length; symbolLabelIndex++)
+                                //discard line flag
+                                discardLine = false;
+
+                                //get the line and trim whitespace
+                                currentLine = streamReader.ReadLine().CompactAndTrimWhitespaces();
+
+                                
+                                if (currentLine == "")
                                 {
-                                    tmpLabel[symbolLabelIndex] = label[symbolLabelIndex];
+                                    Debug.LogError("blank line, skipping: \"" + currentLine + "\"" + "\n", "Adding Symbol");
+                                    discardLine = true;
                                 }
-                                tmpLabel[symbolLabelIndex] = '\0';
-                                StringBuilder sb = new StringBuilder("");
-                                foreach (char c in tmpLabel.TakeWhile(c => c != '\0'))
+                                else if (currentLine.CountStringCharachters(':') != 1)//check incorrect colon seperator count
                                 {
-                                    sb.Append(c);
+                                    Debug.LogError("Extra colon seperators in current line, skipping: \"" + currentLine + "\"" + "\n", "Adding Symbol");
+                                    discardLine = true;
                                 }
-                                symbol.label = sb.ToString().Trim();
-                                symbol.MFlag = false;
-                                symbol.IFlag = true;
-                                if (SymbolTableBST.ContainsKey(symbol.label))
+                                if (!discardLine)
                                 {
-                                    Debug.LogError("Symbol with same Label('" + symbol.label + "') already exists!  Setting MFlag and \n\tskipping: \"" + currentLine + "\"", "Adding Symbol");
-                                    Globals.Symbol sym = SymbolTableBST.GetValueOrDefault(symbol.label);
-                                    if (sym.MFlag == false)
+                                    string[] symbolSubstrings = currentLine.Split(':');
+
+                                    //validate Label
+                                    string label = symbolSubstrings[0].Trim();
+                                    discardLine = !ValidateLabel(label, currentLine, "Adding Symbol");
+
+                                    if (!discardLine)
                                     {
-                                        sym.MFlag = true;
-                                        SymbolTableBST.Remove(symbol.label);
-                                        SymbolTableBST.Add(symbol.label, sym);
+                                        rflagAndValueStrings = symbolSubstrings[1].Trim().Split(' ');
+
+                                        //validate RFlag
+                                        rFlag = rflagAndValueStrings[0].Trim();
+                                        discardLine = TestAndSetRFlag(rFlag, out symbol.RFlag, currentLine, "Adding Symbol");
+                                        if (!discardLine)
+                                        {
+                                            string value = rflagAndValueStrings[1].Trim();
+                                            if (!int.TryParse(value, out symbol.value) || value[0] == '+')
+                                            {
+                                                discardLine = true;
+                                                Debug.LogError("Invalid integer value(" + value + "), skipping: \"" + currentLine + "\"" + "\n", "Adding Symbol");
+                                            }
+                                            if (!discardLine)
+                                            {
+                                                //parse data into Symbol struct
+                                                int symbolLabelIndex = 0;
+                                                for (symbolLabelIndex = 0; symbolLabelIndex < 6 && symbolLabelIndex < label.Length; symbolLabelIndex++)
+                                                {
+                                                    tmpLabel[symbolLabelIndex] = label[symbolLabelIndex];
+                                                }
+                                                tmpLabel[symbolLabelIndex] = '\0';
+                                                StringBuilder sb = new StringBuilder("");
+                                                foreach (char c in tmpLabel.TakeWhile(c => c != '\0'))
+                                                {
+                                                    sb.Append(c);
+                                                }
+                                                symbol.label = sb.ToString().Trim();
+                                                symbol.MFlag = false;
+                                                if (SymbolTableBST.ContainsKey(symbol.label))
+                                                {
+                                                    Debug.LogError("Symbol with same Label('" + symbol.label + "') already exists!  Setting MFlag and \n\tskipping: \"" + currentLine + "\"" + "\n", "Adding Symbol");
+                                                    Globals.Symbol sym = SymbolTableBST.GetValueOrDefault(symbol.label);
+                                                    if (sym.MFlag == false)
+                                                    {
+                                                        sym.MFlag = true;
+                                                        SymbolTableBST.Remove(symbol.label);
+                                                        SymbolTableBST.Add(symbol.label, sym);
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    Debug.Write("Adding symbol: ");
+                                                    symbol.Print();
+                                                    SymbolTableBST.Add(symbol.label, symbol);
+                                                }
+                                            }
+                                        }
                                     }
-                                }
-                                else
-                                {
-                                    Debug.Write("Adding symbol: ");
-                                    symbol.Print();
-                                    SymbolTableBST.Add(symbol.label, symbol);
                                 }
                             }
                         }
                     }
+                    catch (Exception e)
+                    {
+                        Debug.LogError("failed to open File: " + filePath);
+                    }
                 }
             }
-            streamReader.Dispose();
-            fileStream.Dispose();
+            catch (Exception e)
+            {
+                Debug.LogError("failed to open File: " + filePath);
+            }
         }
 
         bool TestAndSetRFlag(string rFlagIn, out bool rFlagOut, string currentLine, string errorPrefix = "")
@@ -147,7 +171,7 @@ namespace Evans1
             {
                 rFlagOut = default;
                 discardLine = true;
-                Debug.LogError("Invalid RFlag value(" + rFlagIn + "), skipping: \"" + currentLine + "\"", errorPrefix);
+                Debug.LogError("Invalid RFlag value(" + rFlagIn + "), skipping: \"" + currentLine + "\"" + "\n", errorPrefix);
             }
             return discardLine;
         }
@@ -157,26 +181,26 @@ namespace Evans1
             bool isValid = true;
             if (label.Length > 12)
             {
-                Debug.LogError("Symbol Label(" + label + ") is too long, \n\tmust be less than 12 charachters in length, skipping: \"" + currentLine + "\"", errorPrefix);
+                Debug.LogError("Symbol Label(" + label + ") is too long, \n\tmust be less than 12 charachters in length, skipping: \"" + currentLine + "\"" + "\n", errorPrefix);
                 isValid = false;
             }
             else if (label.Length == 0)
             {
-                Debug.LogError("Symbol Label(" + label + ") is empty, skipping: \"" + currentLine + "\"", errorPrefix);
+                Debug.LogError("Symbol Label(" + label + ") is empty, skipping: \"" + currentLine + "\"" + "\n", errorPrefix);
                 isValid = false;
             }
             else if (!char.IsLetter(label[0]))
             {
-                Debug.LogError("Symbol Label(" + label + ") does not start with a letter(" + label[0] + "), \n\tskipping: \"" + currentLine + "\"", errorPrefix);
+                Debug.LogError("Symbol Label(" + label + ") does not start with a letter(" + label[0] + "), \n\tskipping: \"" + currentLine + "\"" + "\n", errorPrefix);
                 isValid = false;
             }
             else//only continue validation on short Label that fit in the 12 chars
             {
-                for (int i = 0; i < label.Length && isValid == false; i++)
+                for (int i = 0; i < label.Length && isValid == true; i++)
                 {
                     if (!char.IsLetterOrDigit(label[i]))
                     {
-                        Debug.LogError("Invalid special charachters('" + label[i] + "') detected in Symbol Label(" + label + "), \n\tskipping: \"" + currentLine + "\"", errorPrefix);
+                        Debug.LogError("Invalid special charachters('" + label[i] + "') detected in Symbol Label(" + label + "), \n\tskipping: \"" + currentLine + "\"" + "\n", errorPrefix);
                         isValid = false;
                     }
                 }
@@ -194,15 +218,21 @@ namespace Evans1
         //***  IN/OUT ARGS   :  N/A  
         //***  RETURN :  Symbol? 
         //************************************************************************
-        public Globals.Symbol? SearchSymbol(string str)
+        public bool SearchSymbol(string str, out Globals.Symbol? tempN)
         {
-            Globals.Symbol? tempN = null;
+            bool rtnVal = true;
+            tempN = null;
             Globals.Symbol temp;
             if (SymbolTableBST.TryGetValue(str, out temp))
             {
                 tempN = temp;
             }
-            return tempN;
+            else
+            {
+                Debug.LogError("Symbol(" + str + ") not found", "Searching for symbol");
+                rtnVal = false;
+            }
+            return rtnVal;
         }
 
         //************************************************************************
@@ -226,13 +256,20 @@ namespace Evans1
                 //get the line and trim whitespace
                 string currentLine = streamReader.ReadLine().CompactAndTrimWhitespaces();
 
-                if (ValidateLabel(currentLine, currentLine, "Seeking Symbol"))
+                bool discardLine = false;
+                if (currentLine == "")
+                {
+                    Debug.LogError("blank line, skipping: \"" + currentLine + "\"" + "\n", "Adding Symbol");
+                    discardLine = true;
+                }
+
+                if (discardLine !=true && ValidateLabel(currentLine, currentLine, "Seeking Symbol"))
                 {
                     StringBuilder stringBuilder = new StringBuilder();
                     for (int i = 0; i < currentLine.Length && i < 6; i++)
                         stringBuilder.Append(currentLine[i]);
-                    Globals.Symbol? temp = SearchSymbol(stringBuilder.ToString());
-                    if (temp.HasValue)
+                        
+                    if (SearchSymbol(stringBuilder.ToString(), out Globals.Symbol? temp))
                     {
                         Debug.Write("Found symbol: ");
                         temp.Value.Print();
@@ -242,12 +279,9 @@ namespace Evans1
                         Debug.WriteLine("Symbol(" + currentLine + ") not found");
                     }
                 }
-
             }
-
             streamReader.Dispose();
             fileStream.Dispose();
-
         }
 
         //************************************************************************
