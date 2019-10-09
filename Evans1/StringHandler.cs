@@ -20,7 +20,7 @@ namespace Evans1
         //***  FUNCTION CountStringCharachters 
         //*** ********************************************************************
         //***  DESCRIPTION  :  Counts the occurances of charachters in a string
-        //***  INPUT ARGS   :  this string str, char myChar
+        //***  INPUT ARGS   :  this string str, params char[] myChars
         //***  OUTPUT ARGS :  N/A
         //***  IN/OUT ARGS   :  N/A  
         //***  RETURN :  int count
@@ -40,12 +40,13 @@ namespace Evans1
             }
             return count;
         }
+
         //************************************************************************
         //***  FUNCTION CountStringCharachters 
         //*** ********************************************************************
         //***  DESCRIPTION  :  Counts the occurances of charachters in a string
-        //***  INPUT ARGS   :  this string str, char myChar
-        //***  OUTPUT ARGS :  N/A
+        //***  INPUT ARGS   :  this string str, params char[] myChars
+        //***  OUTPUT ARGS :  out List<char> found
         //***  IN/OUT ARGS   :  N/A  
         //***  RETURN :  int count
         //************************************************************************
@@ -70,7 +71,7 @@ namespace Evans1
         }
 
         //*************************************************************************
-        //***  FUNCTION CountStringCharachters 
+        //***  FUNCTION CompactAndTrimWhitespaces 
         //*** *********************************************************************
         //***  DESCRIPTION  :  Converts string to string builder 
         //***                     and calls CompactWhitespaces

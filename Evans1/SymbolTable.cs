@@ -156,6 +156,16 @@ namespace Evans1
             }
         }
 
+        //******************************************************************************
+        //***  FUNCTION TestAndSetRFlag 
+        //*** **************************************************************************
+        //***  DESCRIPTION  :  maps rflag string vals to boolean vals
+        //***  INPUT ARGS   :  string rFlagIn, out bool rFlagOut, string currentLine,
+        //***                   string errorPrefix = ""
+        //***  OUTPUT ARGS :  N/A
+        //***  IN/OUT ARGS   :  N/A  
+        //***  RETURN :  bool discardLine
+        //******************************************************************************
         bool TestAndSetRFlag(string rFlagIn, out bool rFlagOut, string currentLine, string errorPrefix = "")
         {
             bool discardLine = false;
@@ -176,6 +186,16 @@ namespace Evans1
             return discardLine;
         }
 
+        //******************************************************************************
+        //***  FUNCTION ValidateLabel 
+        //*** **************************************************************************
+        //***  DESCRIPTION  :  Takes a string and ensures the string is a valid
+        //***                   symbol label
+        //***  INPUT ARGS   :  string label, string currentLine, string errorPrefix=""
+        //***  OUTPUT ARGS :  N/A
+        //***  IN/OUT ARGS   :  N/A  
+        //***  RETURN :  bool isValid
+        //******************************************************************************
         public bool ValidateLabel(string label, string currentLine, string errorPrefix="")
         {
             bool isValid = true;

@@ -5,8 +5,28 @@ using System.IO;
 
 namespace Evans1
 {
+    //*********************************************************************
+    //*** NAME : Alex Evans
+    //*** CLASS : CSc 354 Intro to systems
+    //*** ASSIGNMENT : 2
+    //*** DUE DATE : 10/9/2019
+    //*** INSTRUCTOR : GAMRADT 
+    //*********************************************************************
+    //*** DESCRIPTION :   solves an expresion and gets a symbol or sets a 
+    //***                   literal.
+    //*********************************************************************
     class ExpresionHandler
     {
+
+        //*******************************************************************************************
+        //***  FUNCTION ParseExpresionFile 
+        //*** ***************************************************************************************
+        //***  DESCRIPTION  :  Parses the Expresion File
+        //***  INPUT ARGS   :  SymbolTable symbolTable, LiteralTable literalTable, string filePath
+        //***  OUTPUT ARGS :  N/A
+        //***  IN/OUT ARGS   :  N/A  
+        //***  RETURN :  N/A
+        //*******************************************************************************************
         public static void ParseExpresionFile(SymbolTable symbolTable, LiteralTable literalTable, string filePath)
         {
             try
@@ -66,6 +86,16 @@ namespace Evans1
             }
         }
 
+        //*******************************************************************************************
+        //***  FUNCTION ResolveF3F4Expresion 
+        //*** ***************************************************************************************
+        //***  DESCRIPTION  :  Resolves an expresion and adds a literal or gets a symbol
+        //***  INPUT ARGS   :  SymbolTable symbolTable, LiteralTable literalTable,
+        //***                   string expresion, string currentLine
+        //***  OUTPUT ARGS :  out Globals.Symbol? symbol
+        //***  IN/OUT ARGS   :  N/A  
+        //***  RETURN :  bool rtnVal
+        //*******************************************************************************************
         public static bool ResolveF3F4Expresion(SymbolTable symbolTable, LiteralTable literalTable, string expresion, string currentLine, out Globals.Symbol? symbol)
         {
             symbol = null;
@@ -140,6 +170,16 @@ namespace Evans1
             return rtnVal;
         }
 
+        //*******************************************************************************************
+        //***  FUNCTION ParseTerms 
+        //*** ***************************************************************************************
+        //***  DESCRIPTION  :  parses an arithmatic operation str to a symbol, or add a literal
+        //***  INPUT ARGS   :  SymbolTable symbolTable, LiteralTable literalTable, 
+        //***                   string expresion, string currentLine
+        //***  OUTPUT ARGS :  out Globals.Symbol? result
+        //***  IN/OUT ARGS   :  N/A  
+        //***  RETURN :  bool rtnVal
+        //*******************************************************************************************
         static bool ParseTerms(SymbolTable symbolTable, LiteralTable literalTable, string expresion, string currentLine, out Globals.Symbol? result)
         {
             result = null;
@@ -208,6 +248,15 @@ namespace Evans1
             return rtnVal;
         }
 
+        //*******************************************************************************************
+        //***  FUNCTION ParseTerm 
+        //*** ***************************************************************************************
+        //***  DESCRIPTION  :  parses an term str(int or symbol) to a symbol struct
+        //***  INPUT ARGS   :  SymbolTable symbolTable, string term, string currentLine=""
+        //***  OUTPUT ARGS :  out Globals.Symbol? sym
+        //***  IN/OUT ARGS   :  N/A  
+        //***  RETURN :  bool rtnVal
+        //*******************************************************************************************
         static bool ParseTerm(SymbolTable symbolTable, string term, out Globals.Symbol? sym, string currentLine)
         {
             bool rtnVal = true;
@@ -238,6 +287,16 @@ namespace Evans1
             return rtnVal;
         }
 
+
+        //*******************************************************************************************
+        //***  FUNCTION ParseNum 
+        //*** ***************************************************************************************
+        //***  DESCRIPTION  :  parses an int str to a symbol
+        //***  INPUT ARGS   :  string digits, string currentLine=""
+        //***  OUTPUT ARGS :  out Globals.Symbol? sym
+        //***  IN/OUT ARGS   :  N/A  
+        //***  RETURN :  bool rtnVal
+        //*******************************************************************************************
         static bool ParseNum(string digits, out Globals.Symbol? sym, string currentLine="")
         {
             Globals.Symbol tmp = default;

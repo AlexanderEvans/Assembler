@@ -1,9 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-
+//*******************************************************************
+//*** NAME : Alex Evans
+//*** CLASS : CSc 354 Intro to systems
+//*** ASSIGNMENT : 2
+//*** DUE DATE : 10/9/2019
+//*** INSTRUCTOR : GAMRADT 
+//********************************************************************
+//*** DESCRIPTION :   This class adds a globals agragator class
+//********************************************************************
 namespace Evans1
 {
+    //*********************************************************************
+    //*** Class : Globals
+    //*********************************************************************
+    //*** DESCRIPTION :   Aggragates global variables and functions
+    //*********************************************************************
     class Globals
     {
         //*********************************************************************
@@ -38,6 +51,15 @@ namespace Evans1
             {
                 Debug.WriteLine(label + "\t" + RFlag + "\t" + value + "\t" + MFlag + "\t" + IFlag);
             }
+            //************************************************************************
+            //***  FUNCTION operator + 
+            //*** ********************************************************************
+            //***  DESCRIPTION  :  adds 2 symbols 
+            //***  INPUT ARGS   :  Symbol first, Symbol second
+            //***  OUTPUT ARGS :  N/A
+            //***  IN/OUT ARGS   :  N/A  
+            //***  RETURN :  Symbol? rtnVal
+            //************************************************************************
             static public Symbol? operator +(Symbol first, Symbol second)
             {
                 Symbol? rtnVal = null;
@@ -69,6 +91,15 @@ namespace Evans1
                 }
                 return rtnVal;
             }
+            //************************************************************************
+            //***  FUNCTION operator - 
+            //*** ********************************************************************
+            //***  DESCRIPTION  :  subtracts 2 symbols 
+            //***  INPUT ARGS   :  Symbol first, Symbol second
+            //***  OUTPUT ARGS :  N/A
+            //***  IN/OUT ARGS   :  N/A  
+            //***  RETURN :  Symbol? rtnVal
+            //************************************************************************
             static public Symbol? operator -(Symbol first, Symbol second)
             {
                 Symbol? rtnVal = null;
@@ -102,6 +133,15 @@ namespace Evans1
             }
         }
 
+        //************************************************************************
+        //***  FUNCTION CharArrToHexStr
+        //*** ********************************************************************
+        //***  DESCRIPTION  :  converts chars to hex byte strings
+        //***  INPUT ARGS   :  char[] charArr
+        //***  OUTPUT ARGS :  N/A
+        //***  IN/OUT ARGS   :  N/A  
+        //***  RETURN :  string N/A
+        //************************************************************************
         public static string CharArrToHexStr(char[] charArr)
         {
             StringBuilder stringBuilder = new StringBuilder(charArr.Length * 2);
@@ -115,15 +155,38 @@ namespace Evans1
         }
     }
 
+    //*********************************************************************
+    //*** Struct : BoolConverter
+    //*********************************************************************
+    //*** DESCRIPTION :   converts a bool to int implicitly
+    //*********************************************************************
     struct BoolConverter
     {
         bool myBool;
+        //************************************************************************
+        //***  FUNCTION implicit operator BoolConverter
+        //*** ********************************************************************
+        //***  DESCRIPTION  :  converts bool to BoolConverter
+        //***  INPUT ARGS   :  bool first
+        //***  OUTPUT ARGS :  N/A
+        //***  IN/OUT ARGS   :  N/A  
+        //***  RETURN :  BoolConverter boolConverter
+        //************************************************************************
         public static implicit operator BoolConverter(bool first)
         {
             BoolConverter boolConverter=default;
             boolConverter.myBool = first;
             return boolConverter;
         }
+        //************************************************************************
+        //***  FUNCTION implicit operator BoolConverter
+        //*** ********************************************************************
+        //***  DESCRIPTION  :  converts BoolConverter to int
+        //***  INPUT ARGS   :  BoolConverter first
+        //***  OUTPUT ARGS :  N/A
+        //***  IN/OUT ARGS   :  N/A  
+        //***  RETURN :  bool N/A
+        //************************************************************************
         public static implicit operator int(BoolConverter first)
         {
             if (first.myBool)
@@ -132,7 +195,11 @@ namespace Evans1
                 return 0;
         }
     }
-
+    //*********************************************************************
+    //*** class : AsciiComparer
+    //*********************************************************************
+    //*** DESCRIPTION :   compares strings by ascii values
+    //*********************************************************************
     public class AsciiComparer : Comparer<string> 
     {
         public override int Compare(string x, string y)
