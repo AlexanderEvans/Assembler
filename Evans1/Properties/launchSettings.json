@@ -2,7 +2,7 @@
   "profiles": {
     "Evans1": {
       "commandName": "Project",
-      "commandLineArgs": "search.dat"
+      "commandLineArgs": "ExpresionFile.txt"
     }
   }
 }
