@@ -30,34 +30,34 @@ namespace Evans1
         //*************************************************************************
         static void Main(string[] args)
         {
-            Debug.WriteLine("Loading symbols...");
+            TerminalOutput.WriteLine("Loading symbols...");
             SymbolTable symbolTable = new SymbolTable();
             LiteralTable literalTable = new LiteralTable();
             symbolTable.LoadSymbols("../../../SYMBOLS.DAT");
-            Debug.NewLine();
-            Debug.NewLine();
-            Debug.HoldOutput();
-            Debug.WriteLine("Current symbol table values after loading:");
+            TerminalOutput.NewLine();
+            TerminalOutput.NewLine();
+            TerminalOutput.HoldOutput();
+            TerminalOutput.WriteLine("Current symbol table values after loading:");
             symbolTable.Print();
-            Debug.NewLine();
-            Debug.NewLine();
+            TerminalOutput.NewLine();
+            TerminalOutput.NewLine();
 
             string filePath;
             if (args.Length==0)
             {
-                Debug.WriteLine("Please enter the search file name: ");
+                TerminalOutput.WriteLine("Please enter the search file name: ");
                 filePath = Console.ReadLine();
             }
             else
             {
                 filePath = args[0];
             }
-            Debug.HoldOutput();
-            Debug.NewLine();
-            Debug.NewLine();
+            TerminalOutput.HoldOutput();
+            TerminalOutput.NewLine();
+            TerminalOutput.NewLine();
             //symbolTable.SearchSymbols("../../../" + filePath);
             ExpresionHandler.ParseExpresionFile(symbolTable, literalTable, "../../../" + filePath);
-            Debug.HoldOutput();
+            TerminalOutput.HoldOutput();
             literalTable.PrintTable();
         }
     }

@@ -73,12 +73,12 @@ namespace Evans1
                                 
                                 if (currentLine == "")
                                 {
-                                    Debug.LogError("blank line, skipping: \"" + currentLine + "\"" + "\n", "Adding Symbol");
+                                    TerminalOutput.LogError("blank line, skipping: \"" + currentLine + "\"" + "\n", "Adding Symbol");
                                     discardLine = true;
                                 }
                                 else if (currentLine.CountStringCharachters(':') != 1)//check incorrect colon seperator count
                                 {
-                                    Debug.LogError("Extra colon seperators in current line, skipping: \"" + currentLine + "\"" + "\n", "Adding Symbol");
+                                    TerminalOutput.LogError("Extra colon seperators in current line, skipping: \"" + currentLine + "\"" + "\n", "Adding Symbol");
                                     discardLine = true;
                                 }
                                 if (!discardLine)
@@ -102,7 +102,7 @@ namespace Evans1
                                             if (!int.TryParse(value, out symbol.value) || value[0] == '+')
                                             {
                                                 discardLine = true;
-                                                Debug.LogError("Invalid integer value(" + value + "), skipping: \"" + currentLine + "\"" + "\n", "Adding Symbol");
+                                                TerminalOutput.LogError("Invalid integer value(" + value + "), skipping: \"" + currentLine + "\"" + "\n", "Adding Symbol");
                                             }
                                             if (!discardLine)
                                             {
@@ -122,7 +122,7 @@ namespace Evans1
                                                 symbol.MFlag = false;
                                                 if (SymbolTableBST.ContainsKey(symbol.label))
                                                 {
-                                                    Debug.LogError("Symbol with same Label('" + symbol.label + "') already exists!  Setting MFlag and \n\tskipping: \"" + currentLine + "\"" + "\n", "Adding Symbol");
+                                                    TerminalOutput.LogError("Symbol with same Label('" + symbol.label + "') already exists!  Setting MFlag and \n\tskipping: \"" + currentLine + "\"" + "\n", "Adding Symbol");
                                                     Globals.Symbol sym = SymbolTableBST.GetValueOrDefault(symbol.label);
                                                     if (sym.MFlag == false)
                                                     {
@@ -133,7 +133,7 @@ namespace Evans1
                                                 }
                                                 else
                                                 {
-                                                    Debug.Write("Adding symbol: ");
+                                                    TerminalOutput.Write("Adding symbol: ");
                                                     symbol.Print();
                                                     SymbolTableBST.Add(symbol.label, symbol);
                                                 }
@@ -146,13 +146,13 @@ namespace Evans1
                     }
                     catch (Exception e)
                     {
-                        Debug.LogError("failed to open File: " + filePath);
+                        TerminalOutput.LogError("failed to open File: " + filePath);
                     }
                 }
             }
             catch (Exception e)
             {
-                Debug.LogError("failed to open File: " + filePath);
+                TerminalOutput.LogError("failed to open File: " + filePath);
             }
         }
 
@@ -181,7 +181,7 @@ namespace Evans1
             {
                 rFlagOut = default;
                 discardLine = true;
-                Debug.LogError("Invalid RFlag value(" + rFlagIn + "), skipping: \"" + currentLine + "\"" + "\n", errorPrefix);
+                TerminalOutput.LogError("Invalid RFlag value(" + rFlagIn + "), skipping: \"" + currentLine + "\"" + "\n", errorPrefix);
             }
             return discardLine;
         }
@@ -201,17 +201,17 @@ namespace Evans1
             bool isValid = true;
             if (label.Length > 12)
             {
-                Debug.LogError("Symbol Label(" + label + ") is too long, \n\tmust be less than 12 charachters in length, skipping: \"" + currentLine + "\"" + "\n", errorPrefix);
+                TerminalOutput.LogError("Symbol Label(" + label + ") is too long, \n\tmust be less than 12 charachters in length, skipping: \"" + currentLine + "\"" + "\n", errorPrefix);
                 isValid = false;
             }
             else if (label.Length == 0)
             {
-                Debug.LogError("Symbol Label(" + label + ") is empty, skipping: \"" + currentLine + "\"" + "\n", errorPrefix);
+                TerminalOutput.LogError("Symbol Label(" + label + ") is empty, skipping: \"" + currentLine + "\"" + "\n", errorPrefix);
                 isValid = false;
             }
             else if (!char.IsLetter(label[0]))
             {
-                Debug.LogError("Symbol Label(" + label + ") does not start with a letter(" + label[0] + "), \n\tskipping: \"" + currentLine + "\"" + "\n", errorPrefix);
+                TerminalOutput.LogError("Symbol Label(" + label + ") does not start with a letter(" + label[0] + "), \n\tskipping: \"" + currentLine + "\"" + "\n", errorPrefix);
                 isValid = false;
             }
             else//only continue validation on short Label that fit in the 12 chars
@@ -220,7 +220,7 @@ namespace Evans1
                 {
                     if (!char.IsLetterOrDigit(label[i]))
                     {
-                        Debug.LogError("Invalid special charachters('" + label[i] + "') detected in Symbol Label(" + label + "), \n\tskipping: \"" + currentLine + "\"" + "\n", errorPrefix);
+                        TerminalOutput.LogError("Invalid special charachters('" + label[i] + "') detected in Symbol Label(" + label + "), \n\tskipping: \"" + currentLine + "\"" + "\n", errorPrefix);
                         isValid = false;
                     }
                 }
@@ -249,7 +249,7 @@ namespace Evans1
             }
             else
             {
-                Debug.LogError("Symbol(" + str + ") not found", "Searching for symbol");
+                TerminalOutput.LogError("Symbol(" + str + ") not found", "Searching for symbol");
                 rtnVal = false;
             }
             return rtnVal;
@@ -279,7 +279,7 @@ namespace Evans1
                 bool discardLine = false;
                 if (currentLine == "")
                 {
-                    Debug.LogError("blank line, skipping: \"" + currentLine + "\"" + "\n", "Adding Symbol");
+                    TerminalOutput.LogError("blank line, skipping: \"" + currentLine + "\"" + "\n", "Adding Symbol");
                     discardLine = true;
                 }
 
@@ -291,12 +291,12 @@ namespace Evans1
                         
                     if (SearchSymbol(stringBuilder.ToString(), out Globals.Symbol? temp))
                     {
-                        Debug.Write("Found symbol: ");
+                        TerminalOutput.Write("Found symbol: ");
                         temp.Value.Print();
                     }
                     else
                     {
-                        Debug.WriteLine("Symbol(" + currentLine + ") not found");
+                        TerminalOutput.WriteLine("Symbol(" + currentLine + ") not found");
                     }
                 }
             }
@@ -315,8 +315,8 @@ namespace Evans1
         //************************************************************************
         public void Print()
         {
-            Debug.WriteLine("Symbol\tRFlag\tValue \tMFlag \tIFlag");
-            Debug.WriteLine("=====================================");
+            TerminalOutput.WriteLine("Symbol\tRFlag\tValue \tMFlag \tIFlag");
+            TerminalOutput.WriteLine("=====================================");
             foreach (KeyValuePair<string, Globals.Symbol> keyValuePair in SymbolTableBST)
             {
                 keyValuePair.Value.Print();

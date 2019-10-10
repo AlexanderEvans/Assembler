@@ -39,7 +39,7 @@ namespace Evans1
                         using (StreamReader streamReader = new StreamReader(fileStream))
                         {
                             int LineNumber = 1;
-                            Debug.WriteLine("EXPRESION\tVALUE\tRELOCATABLE\tN-Bit\tI-Bit\tX-Bit");
+                            TerminalOutput.WriteLine("EXPRESION\tVALUE\tRELOCATABLE\tN-Bit\tI-Bit\tX-Bit");
                             while (!streamReader.EndOfStream)
                             {
                                 //get the line and trim whitespace
@@ -53,36 +53,36 @@ namespace Evans1
                                         {
                                             sb.Append(" ");
                                         }
-                                        Debug.Write(currentLine + sb.ToString());
-                                        Debug.Write(symbol.Value.value.ToString());
-                                        Debug.Write("\t" + ((symbol.Value.RFlag) ? "RELOCATABLE" : "ABSOLUTE"));
-                                        Debug.Write("\t" + ((symbol.Value.NFlag) ? "1" : "0"));
-                                        Debug.Write("\t" + ((symbol.Value.IFlag) ? "1" : "0"));
-                                        Debug.Write("\t" + ((symbol.Value.XFlag) ? "1" : "0"));
-                                        Debug.NewLine();
+                                        TerminalOutput.Write(currentLine + sb.ToString());
+                                        TerminalOutput.Write(symbol.Value.value.ToString());
+                                        TerminalOutput.Write("\t" + ((symbol.Value.RFlag) ? "RELOCATABLE" : "ABSOLUTE"));
+                                        TerminalOutput.Write("\t" + ((symbol.Value.NFlag) ? "1" : "0"));
+                                        TerminalOutput.Write("\t" + ((symbol.Value.IFlag) ? "1" : "0"));
+                                        TerminalOutput.Write("\t" + ((symbol.Value.XFlag) ? "1" : "0"));
+                                        TerminalOutput.NewLine();
                                     }
                                 }
                                 else
                                 {
-                                    Debug.LogError("Opps, something went wrong in resolving the expresion at \n\tline: \"" + LineNumber + "\"\t Please check your expresion file, skipping: \"" + currentLine + "\"" + "\n", "Expresion File Parsing");
+                                    TerminalOutput.LogError("Opps, something went wrong in resolving the expresion at \n\tline: \"" + LineNumber + "\"\t Please check your expresion file, skipping: \"" + currentLine + "\"" + "\n", "Expresion File Parsing");
                                 }
                                 LineNumber++;
                             }
-                            Debug.LogInfo("Done");
-                            Debug.WriteLine("Done");
+                            TerminalOutput.LogInfo("Done");
+                            TerminalOutput.WriteLine("Done");
                         }
                     }
                     catch (IOException e)
                     {
-                        Debug.WriteLine(e.Message);
-                        Debug.LogError("failed to open File: " + filePath);
+                        TerminalOutput.WriteLine(e.Message);
+                        TerminalOutput.LogError("failed to open File: " + filePath);
                     }
                 }
             }
             catch (IOException e)
             {
-                Debug.WriteLine(e.Message);
-                Debug.LogError("failed to open File: " + filePath);
+                TerminalOutput.WriteLine(e.Message);
+                TerminalOutput.LogError("failed to open File: " + filePath);
             }
         }
 
@@ -121,7 +121,7 @@ namespace Evans1
                 else
                 {
                     rtnVal = false;
-                    Debug.LogError("Can not apply both indirect adressing \n\tand x register indexing, skipping: \"" + currentLine + "\""+"\n", "Resovling Expresion");
+                    TerminalOutput.LogError("Can not apply both indirect adressing \n\tand x register indexing, skipping: \"" + currentLine + "\"", "Resovling Expresion");
                 }
             }
             else if (expresion[0] == '#')
@@ -144,7 +144,7 @@ namespace Evans1
                 else
                 {
                     rtnVal = false;
-                    Debug.LogError("Can not apply both immediate adressing \n\tand x register indexing, skipping:\"" + currentLine + "\""+"\n", "Resovling Expresion");
+                    TerminalOutput.LogError("Can not apply both immediate adressing \n\tand x register indexing, skipping:\"" + currentLine + "\"", "Resovling Expresion");
                 }
             }
             else if ((expresion[expresion.Length-1] == 'X' || expresion[expresion.Length - 1] == 'x') && expresion[expresion.Length - 2] == ',')
@@ -212,7 +212,7 @@ namespace Evans1
                             if (result == null)
                             {
                                 rtnVal = false;
-                                Debug.LogDetailedInfo("\t...Arithmetic operation in Expresion Handler failed");
+                                TerminalOutput.LogDetailedInfo("\t...Arithmetic operation in Expresion Handler failed");
                             }
                         }
                         else
@@ -222,7 +222,7 @@ namespace Evans1
                     }
                     else
                     {
-                        Debug.LogError("Attempted to resolve invalid expresion!\n\tArithmitic must be performed on exactly 2 terms(detected "+terms.Length+"), skipping: \"" + currentLine + "\"" + "\n", "Resolving Expresion");
+                        TerminalOutput.LogError("Attempted to resolve invalid expresion!\n\tArithmitic must be performed on exactly 2 terms(detected "+terms.Length+"), skipping: \"" + currentLine + "\"", "Resolving Expresion");
                         rtnVal = false;
                     }
                 }
@@ -242,7 +242,7 @@ namespace Evans1
             }
             else
             {
-                Debug.LogError("Attempted to resolve invalid expresion!\n\tThere is more than one arithmatic operator indicating 3 or more terms, skipping: \"" + currentLine + "\""+ "\n", "Resolving Expresion");
+                TerminalOutput.LogError("Attempted to resolve invalid expresion!\n\tThere is more than one arithmatic operator indicating 3 or more terms, skipping: \"" + currentLine + "\"", "Resolving Expresion");
                 rtnVal = false;
             }
             return rtnVal;
@@ -269,19 +269,19 @@ namespace Evans1
                 }
                 else
                 {
-                    Debug.LogDetailedInfo("Parse term(digit) in Expresion Handler failed");
+                    TerminalOutput.LogDetailedInfo("Parse term(digit) in Expresion Handler failed");
                     rtnVal = false;
                 }
             }
             else
             {
-                Debug.LogDetailedInfo("Parse term(sym) start");
+                TerminalOutput.LogDetailedInfo("Parse term(sym) start");
                 if ((symbolTable.SearchSymbol(term.Trim(), out sym)) != true)
                 {
-                    Debug.LogDetailedInfo("Parse term(sym) in Expresion Handler failed");
+                    TerminalOutput.LogDetailedInfo("Parse term(sym) in Expresion Handler failed");
                     rtnVal = false;
                 }
-                Debug.LogDetailedInfo("Parse term(sym) end");
+                TerminalOutput.LogDetailedInfo("Parse term(sym) end");
             }
 
             return rtnVal;
@@ -314,7 +314,7 @@ namespace Evans1
             }
             else
             {
-                Debug.LogError("Attempted to resolve invalid integer!\n\tUnable to parse integer value, skipping: \"" + currentLine + "\"" + "\n", "Resolving Expresion");
+                TerminalOutput.LogError("Attempted to resolve invalid integer!\n\tUnable to parse integer value, skipping: \"" + currentLine + "\"", "Resolving Expresion");
                 sym = null;
                 rtnVal = false;
             }

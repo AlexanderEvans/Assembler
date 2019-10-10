@@ -49,7 +49,7 @@ namespace Evans1
             //************************************************************************
             public void Print()
             {
-                Debug.WriteLine(label + "\t" + RFlag + "\t" + value + "\t" + MFlag + "\t" + IFlag);
+                TerminalOutput.WriteLine(label + "\t" + RFlag + "\t" + value + "\t" + MFlag + "\t" + IFlag);
             }
             //************************************************************************
             //***  FUNCTION operator + 

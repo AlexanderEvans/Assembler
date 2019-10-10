@@ -49,7 +49,7 @@ namespace Evans1
         //************************************************************************
         public void PrintTable()
         {
-            Debug.WriteLine("NAME\t\tVALUE\t\tLENGTH\tADDRESS");
+            TerminalOutput.WriteLine("NAME\t\tVALUE\t\tLENGTH\tADDRESS");
             foreach(LiteralValue lv in literalTable)
             {
                 StringBuilder sb = new StringBuilder("");
@@ -57,16 +57,16 @@ namespace Evans1
                 {
                     sb.Append(" ");
                 }
-                Debug.Write(lv.label + sb.ToString());
+                TerminalOutput.Write(lv.label + sb.ToString());
                 sb = new StringBuilder("");
                 for (int x = 0; x < (16 - lv.value.Length); x++)
                 {
                     sb.Append(" ");
                 }
-                Debug.Write(lv.value+sb.ToString());
-                Debug.Write(lv.Length.ToString());
-                Debug.Write("\t" + lv.address.ToString());
-                Debug.NewLine();
+                TerminalOutput.Write(lv.value+sb.ToString());
+                TerminalOutput.Write(lv.Length.ToString());
+                TerminalOutput.Write("\t" + lv.address.ToString());
+                TerminalOutput.NewLine();
             }
         }
 
@@ -103,7 +103,7 @@ namespace Evans1
             }
             else
             {
-                Debug.LogError("Invalid literal type, please indicate hex\'X\' or Char\'C\'\n", "Adding Literal");
+                TerminalOutput.LogError("Invalid literal type, please indicate hex\'X\' or Char\'C\'", "Adding Literal");
                 rtnVal = false;
             }
             literalValue.label = literal;
@@ -112,7 +112,7 @@ namespace Evans1
             {
                 if(literal[2] != '\'' || '\'' != literal[literal.Length-1])
                 {
-                    Debug.LogError("Invalid enclosing symbols, please surround your literal with \n\tsingle quotes '\'' and remove any trailing garbage from the expresion\n", "Adding Literal");
+                    TerminalOutput.LogError("Invalid enclosing symbols, please surround your literal with \n\tsingle quotes '\'' and remove any trailing garbage from the expresion", "Adding Literal");
                     rtnVal = false;
                 }
             }
@@ -132,7 +132,7 @@ namespace Evans1
                     if (validateHex(literalValue.value) != true)
                     {
                         rtnVal = false;
-                        Debug.LogError("Error in literal, Hex specified, but non Hex chars were detected", "Adding Literal");
+                        TerminalOutput.LogError("Error in literal, Hex specified, but non Hex chars were detected", "Adding Literal");
                     }
                 }
             }
@@ -143,14 +143,14 @@ namespace Evans1
                     if (lv.label == literal)
                     {
                         rtnVal = false;
-                        Debug.LogError("Error in literal, This literal is already in the \n\tliteral table!\n", "Adding Literal");
+                        TerminalOutput.LogError("Error in literal, This literal is already in the \n\tliteral table!", "Adding Literal");
                     }
                 }
             }
             if (rtnVal == true)
             {
                 literalValue.address = count;
-                Debug.LogInfo("Adding: "+literalValue.label, "Adding Literal");
+                TerminalOutput.LogInfo("Adding: "+literalValue.label, "Adding Literal");
                 literalTable.AddLast(literalValue);
                 count++;
             }

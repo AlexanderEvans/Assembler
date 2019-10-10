@@ -13,18 +13,19 @@ namespace Evans1
      //*****************************************************************************
      //*** DESCRIPTION :   This class handles holding output and output filters
      //*****************************************************************************
-    class Debug
+    class TerminalOutput
     {
         private static int count = 0;
         public static int LinesBeforeHolding = 20;
-        public enum outputOptions : byte
+        public enum OutputOptions : byte
         {
             ERR     =   0b1000,
             WARN    =   0b100,
             INFO    =   0b10,
             DETAIL  =   0b1,
+            IGNORE  =   0b0,
         }
-        public static int outputMask = (int)(outputOptions.ERR | outputOptions.WARN);
+        public static int outputMask = (int)(OutputOptions.ERR | OutputOptions.WARN);
 
         //*************************************************************************
         //***  FUNCTION HoldOutput 
@@ -38,7 +39,7 @@ namespace Evans1
         public static void HoldOutput()
         {
             count = 1;
-            Console.WriteLine("Holding Input: Press any key to continue...");
+            Console.WriteLine("Holding Output: Press any key to continue...");
             Console.ReadKey();
             Console.WriteLine();
         }
@@ -52,29 +53,35 @@ namespace Evans1
         //***  IN/OUT ARGS   :  N/A  
         //***  RETURN :  N/A
         //*************************************************************************
-        public static void Write(string msg)
+        public static void Write(string msg, OutputOptions outputOptions = OutputOptions.IGNORE)
         {
-            if(msg.CountStringCharachters('\n')>0)
+            if (checkMask(outputOptions))
             {
-                string[] arr = msg.Split('\n');
-                foreach (string str in arr)
+                if (msg.CountStringCharachters('\n') > 0)
                 {
-                    Console.Write(str);
-                    if (arr.Length > 1)
+                    string[] arr = msg.Split('\n');
+                    StringBuilder stringBuilder = new StringBuilder("");
+                    for (int i = 0; i < arr.Length; i++)
                     {
-                        Console.WriteLine();
-                        count++;
-                        if (count % LinesBeforeHolding == 0)
+                        if (i != arr.Length - 1)
                         {
-                            Console.WriteLine("Holding Input: Press any key to continue...");
-                            Console.ReadKey();
-                            Console.WriteLine();
+                            if (count % LinesBeforeHolding == 0)
+                            {
+                                Console.Write(stringBuilder);
+                                HoldOutput();
+                            }
+                            stringBuilder.Append(arr[i]);
+                            stringBuilder.Append('\n');
+                            count++;
                         }
+                        else
+                            stringBuilder.Append(arr[i]);
                     }
+                    Console.Write(stringBuilder);
                 }
+                else
+                    Console.Write(msg);
             }
-            else
-                Console.Write(msg);
         }
         //*************************************************************************
         //***  FUNCTION WriteLine 
@@ -85,13 +92,11 @@ namespace Evans1
         //***  IN/OUT ARGS   :  N/A  
         //***  RETURN :  N/A
         //*************************************************************************
-        public static void WriteLine(string msg)
+        public static void WriteLine(string msg, OutputOptions outputOptions = OutputOptions.IGNORE)
         {
-            string[] arr = msg.Split('\n');
-            foreach (string str in arr)
-                PrintLine(str);
+            if(checkMask(outputOptions))
+                Write(msg + '\n');
         }
-
         //*************************************************************************
         //***  FUNCTION NewLine 
         //*** *********************************************************************
@@ -101,30 +106,27 @@ namespace Evans1
         //***  IN/OUT ARGS   :  N/A  
         //***  RETURN :  N/A
         //*************************************************************************
-        public static void NewLine()
+        public static void NewLine(OutputOptions outputOptions = OutputOptions.IGNORE)
         {
-            PrintLine("");
+            if (checkMask(outputOptions))
+                WriteLine("");
         }
 
         //*************************************************************************
-        //***  FUNCTION PrintLine 
+        //***  FUNCTION checkMask 
         //*** *********************************************************************
-        //***  DESCRIPTION  :  prints msg with endline
-        //***  INPUT ARGS   :  string msg
+        //***  DESCRIPTION  :  Determines if we are in a matching print mode
+        //***  INPUT ARGS   :  OutputOptions outputOptions
         //***  OUTPUT ARGS :  N/A
         //***  IN/OUT ARGS   :  N/A  
-        //***  RETURN :  N/A
+        //***  RETURN : bool rtnVal
         //*************************************************************************
-        private static void PrintLine(string msg)
+        static bool checkMask(OutputOptions outputOptions)
         {
-            count++;
-            if (count % LinesBeforeHolding == 0)
-            {
-                Console.WriteLine("Holding Input: Press any key to continue...");
-                Console.ReadKey();
-                Console.WriteLine();
-            }
-            Console.WriteLine(msg);
+            bool rtnVal = false;
+            if ((((int)outputOptions & outputMask) != 0) || outputOptions == OutputOptions.IGNORE)
+                rtnVal = true;
+            return rtnVal;
         }
 
         //*************************************************************************
@@ -138,8 +140,7 @@ namespace Evans1
         //*************************************************************************
         public static void LogInfo(string msg, string loc="")
         {
-            int flags = (int)outputOptions.INFO;
-            if((flags & outputMask)>0)
+            if(checkMask(OutputOptions.INFO))
             {
                 if (loc == "")
                     WriteLine("Info: " + msg);
@@ -159,8 +160,7 @@ namespace Evans1
         //*************************************************************************
         public static void LogDetailedInfo(string msg, string loc="")
         {
-            int flags = (int)outputOptions.DETAIL;
-            if ((flags & outputMask) > 0)
+            if (checkMask(OutputOptions.DETAIL))
             {
                 if (loc == "")
                     WriteLine("Detail: " + msg);
@@ -179,8 +179,7 @@ namespace Evans1
         //*************************************************************************
         public static void LogWarn(string msg, string loc="")
         {
-            int flags = (int)outputOptions.WARN;
-            if ((flags & outputMask) > 0)
+            if (checkMask(OutputOptions.WARN))
             {
                 if (loc == "")
                     WriteLine("Warning: " + msg);
@@ -202,8 +201,7 @@ namespace Evans1
         //*************************************************************************
         public static void LogError(string msg, string loc="")
         {
-            int flags = (int)outputOptions.ERR;
-            if ((flags & outputMask) > 0)
+            if (checkMask(OutputOptions.ERR))
             {
                 if (loc == "")
                     WriteLine("Error: " + msg);
