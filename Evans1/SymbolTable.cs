@@ -40,8 +40,9 @@ namespace Evans1
             Globals.Symbol symbol = default;
             symbol.label = "";
             symbol.IFlag = true;
-            symbol.NFlag = true;
-            symbol.XFlag = false;
+            symbol.IBit = true;
+            symbol.Nbit = true;
+            symbol.XBit = false;
             char[] tmpLabel = new char[7];
 
             //discard line flag
@@ -133,8 +134,8 @@ namespace Evans1
                                                 }
                                                 else
                                                 {
-                                                    TerminalOutput.Write("Adding symbol: ");
-                                                    symbol.Print();
+                                                    TerminalOutput.Write("Adding symbol: ", TerminalOutput.OutputOptions.INFO);
+                                                    symbol.Print(TerminalOutput.OutputOptions.INFO);
                                                     SymbolTableBST.Add(symbol.label, symbol);
                                                 }
                                             }
@@ -144,13 +145,13 @@ namespace Evans1
                             }
                         }
                     }
-                    catch (Exception e)
+                    catch (IOException e)
                     {
                         TerminalOutput.LogError("failed to open File: " + filePath);
                     }
                 }
             }
-            catch (Exception e)
+            catch (IOException e)
             {
                 TerminalOutput.LogError("failed to open File: " + filePath);
             }
@@ -292,7 +293,7 @@ namespace Evans1
                     if (SearchSymbol(stringBuilder.ToString(), out Globals.Symbol? temp))
                     {
                         TerminalOutput.Write("Found symbol: ");
-                        temp.Value.Print();
+                        temp.Value.Print(TerminalOutput.OutputOptions.IGNORE);
                     }
                     else
                     {
@@ -313,13 +314,13 @@ namespace Evans1
         //***  IN/OUT ARGS   :  N/A  
         //***  RETURN :  N/A
         //************************************************************************
-        public void Print()
+        public void Print(TerminalOutput.OutputOptions outputOptions = TerminalOutput.OutputOptions.IGNORE)
         {
-            TerminalOutput.WriteLine("Symbol\tRFlag\tValue \tMFlag \tIFlag");
-            TerminalOutput.WriteLine("=====================================");
+            TerminalOutput.WriteLine("Symbol\tRFlag\tValue \tMFlag \tIFlag", outputOptions);
+            TerminalOutput.WriteLine("=====================================", outputOptions);
             foreach (KeyValuePair<string, Globals.Symbol> keyValuePair in SymbolTableBST)
             {
-                keyValuePair.Value.Print();
+                keyValuePair.Value.Print(outputOptions);
             }
         }
     }

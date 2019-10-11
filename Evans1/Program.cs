@@ -34,9 +34,7 @@ namespace Evans1
             SymbolTable symbolTable = new SymbolTable();
             LiteralTable literalTable = new LiteralTable();
             symbolTable.LoadSymbols("../../../SYMBOLS.DAT");
-            TerminalOutput.NewLine();
-            TerminalOutput.NewLine();
-            TerminalOutput.HoldOutput();
+            TerminalOutput.HoldOutput(TerminalOutput.OutputOptions.INFO);
             TerminalOutput.WriteLine("Current symbol table values after loading:");
             symbolTable.Print();
             TerminalOutput.NewLine();

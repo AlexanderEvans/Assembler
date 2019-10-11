@@ -34,10 +34,11 @@ namespace Evans1
 
             //deduced data
             public bool IFlag;
+            public bool IBit;
             public bool MFlag;
 
-            public bool NFlag;
-            public bool XFlag;
+            public bool Nbit;
+            public bool XBit;
             //************************************************************************
             //***  FUNCTION Print 
             //*** ********************************************************************
@@ -47,9 +48,9 @@ namespace Evans1
             //***  IN/OUT ARGS   :  N/A  
             //***  RETURN :  N/A
             //************************************************************************
-            public void Print()
+            public void Print(TerminalOutput.OutputOptions outputOptions)
             {
-                TerminalOutput.WriteLine(label + "\t" + RFlag + "\t" + value + "\t" + MFlag + "\t" + IFlag);
+                TerminalOutput.WriteLine(label + "\t" + RFlag + "\t" + value + "\t" + MFlag + "\t" + IFlag, outputOptions);
             }
             //************************************************************************
             //***  FUNCTION operator + 
@@ -65,9 +66,9 @@ namespace Evans1
                 Symbol? rtnVal = null;
                 Symbol tmp = default;
                 tmp.label = "";
-                tmp.NFlag = first.NFlag | second.NFlag;
-                tmp.IFlag = true;
-                tmp.XFlag = false;
+                tmp.Nbit = first.Nbit | second.Nbit;
+                tmp.IBit = true;
+                tmp.XBit = false;
                 tmp.MFlag = first.MFlag | second.MFlag;
                 tmp.value = first.value + second.value;
                 int rVal = (((int)(BoolConverter)first.RFlag) << 1) + ((int)(BoolConverter)second.RFlag);
@@ -105,9 +106,9 @@ namespace Evans1
                 Symbol? rtnVal = null;
                 Symbol tmp = default;
                 tmp.label = "";
-                tmp.NFlag = first.NFlag | second.NFlag;
-                tmp.IFlag = true;
-                tmp.XFlag = false;
+                tmp.Nbit = first.Nbit | second.Nbit;
+                tmp.IBit = true;
+                tmp.XBit = false;
                 tmp.MFlag = first.MFlag | second.MFlag;
                 tmp.value = first.value - second.value;
                 int rVal = (((int)(BoolConverter)first.RFlag) << 1) + ((int)(BoolConverter)second.RFlag);

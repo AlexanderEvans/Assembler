@@ -15,7 +15,7 @@ namespace Evans1
      //*****************************************************************************
     class TerminalOutput
     {
-        private static int count = 0;
+        private static int count = 1;
         public static int LinesBeforeHolding = 20;
         public enum OutputOptions : byte
         {
@@ -25,7 +25,7 @@ namespace Evans1
             DETAIL  =   0b1,
             IGNORE  =   0b0,
         }
-        public static int outputMask = (int)(OutputOptions.ERR | OutputOptions.WARN);
+        public static int outputMask = (int)(OutputOptions.ERR | OutputOptions.WARN | OutputOptions.INFO);
 
         //*************************************************************************
         //***  FUNCTION HoldOutput 
@@ -36,12 +36,15 @@ namespace Evans1
         //***  IN/OUT ARGS   :  N/A  
         //***  RETURN :  N/A
         //*************************************************************************
-        public static void HoldOutput()
+        public static void HoldOutput(OutputOptions outputOptions = OutputOptions.IGNORE)
         {
-            count = 1;
-            Console.WriteLine("Holding Output: Press any key to continue...");
-            Console.ReadKey();
-            Console.WriteLine();
+            if(checkMask(outputOptions))
+            {
+                count = 1;
+                Console.WriteLine("Holding Output: Press any key to continue...");
+                Console.ReadKey();
+                Console.WriteLine();
+            }
         }
 
         //*************************************************************************

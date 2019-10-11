@@ -47,26 +47,27 @@ namespace Evans1
         //***  IN/OUT ARGS   :  N/A  
         //***  RETURN :  N/A
         //************************************************************************
-        public void PrintTable()
+        public void PrintTable(TerminalOutput.OutputOptions outputOptions = TerminalOutput.OutputOptions.IGNORE)
         {
-            TerminalOutput.WriteLine("NAME\t\tVALUE\t\tLENGTH\tADDRESS");
-            foreach(LiteralValue lv in literalTable)
+            TerminalOutput.WriteLine("NAME\t\tVALUE\t\tLENGTH\tADDRESS", outputOptions);
+            StringBuilder sb = new StringBuilder("");
+            foreach (LiteralValue lv in literalTable)
             {
-                StringBuilder sb = new StringBuilder("");
+                sb.Clear();
                 for (int x = 0; x < (16 - lv.label.Length); x++)
                 {
                     sb.Append(" ");
                 }
-                TerminalOutput.Write(lv.label + sb.ToString());
-                sb = new StringBuilder("");
+                TerminalOutput.Write(lv.label + sb.ToString(), outputOptions);
+                sb.Clear();
                 for (int x = 0; x < (16 - lv.value.Length); x++)
                 {
                     sb.Append(" ");
                 }
-                TerminalOutput.Write(lv.value+sb.ToString());
-                TerminalOutput.Write(lv.Length.ToString());
-                TerminalOutput.Write("\t" + lv.address.ToString());
-                TerminalOutput.NewLine();
+                TerminalOutput.Write(lv.value+sb.ToString(), outputOptions);
+                TerminalOutput.Write(lv.Length.ToString(), outputOptions);
+                TerminalOutput.Write("\t" + lv.address.ToString(), outputOptions);
+                TerminalOutput.NewLine(outputOptions);
             }
         }
 
@@ -143,7 +144,7 @@ namespace Evans1
                     if (lv.label == literal)
                     {
                         rtnVal = false;
-                        TerminalOutput.LogError("Error in literal, This literal is already in the \n\tliteral table!", "Adding Literal");
+                        TerminalOutput.LogError("This literal is already in the literal table!", "Adding Literal");
                     }
                 }
             }

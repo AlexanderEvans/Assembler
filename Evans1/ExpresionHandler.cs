@@ -56,20 +56,19 @@ namespace Evans1
                                         TerminalOutput.Write(currentLine + sb.ToString());
                                         TerminalOutput.Write(symbol.Value.value.ToString());
                                         TerminalOutput.Write("\t" + ((symbol.Value.RFlag) ? "RELOCATABLE" : "ABSOLUTE"));
-                                        TerminalOutput.Write("\t" + ((symbol.Value.NFlag) ? "1" : "0"));
-                                        TerminalOutput.Write("\t" + ((symbol.Value.IFlag) ? "1" : "0"));
-                                        TerminalOutput.Write("\t" + ((symbol.Value.XFlag) ? "1" : "0"));
+                                        TerminalOutput.Write("\t" + ((symbol.Value.Nbit) ? "1" : "0"));
+                                        TerminalOutput.Write("\t" + ((symbol.Value.IBit) ? "1" : "0"));
+                                        TerminalOutput.Write("\t" + ((symbol.Value.XBit) ? "1" : "0"));
                                         TerminalOutput.NewLine();
                                     }
                                 }
                                 else
                                 {
-                                    TerminalOutput.LogError("Opps, something went wrong in resolving the expresion at \n\tline: \"" + LineNumber + "\"\t Please check your expresion file, skipping: \"" + currentLine + "\"" + "\n", "Expresion File Parsing");
+                                    TerminalOutput.LogError("Line: \"" + LineNumber + "\" Skipping: \"" + currentLine + "\"", "Expresion File Parsing");
                                 }
                                 LineNumber++;
                             }
-                            TerminalOutput.LogInfo("Done");
-                            TerminalOutput.WriteLine("Done");
+                            TerminalOutput.LogInfo("DONE loading symbols!");
                         }
                     }
                     catch (IOException e)
@@ -109,8 +108,8 @@ namespace Evans1
                     if (ParseTerms(symbolTable, literalTable, expresion, currentLine, out symbol))
                     {
                         Globals.Symbol tmp = symbol.Value;
-                        tmp.NFlag = true;
-                        tmp.IFlag = false;
+                        tmp.Nbit = true;
+                        tmp.IBit = false;
                         symbol = tmp;
                     }
                     else
@@ -132,8 +131,8 @@ namespace Evans1
                     if (ParseTerms(symbolTable, literalTable, expresion, currentLine, out symbol))
                     {
                         Globals.Symbol tmp = symbol.Value;
-                        tmp.NFlag = false;
-                        tmp.IFlag = true;
+                        tmp.Nbit = false;
+                        tmp.IBit = true;
                         symbol = tmp;
                     }
                     else
@@ -153,9 +152,9 @@ namespace Evans1
                 if (ParseTerms(symbolTable, literalTable, expresion, currentLine, out symbol))
                 {
                     Globals.Symbol tmp = symbol.Value;
-                    tmp.NFlag = true;
-                    tmp.IFlag = true;
-                    tmp.XFlag = true;
+                    tmp.Nbit = true;
+                    tmp.IBit = true;
+                    tmp.XBit = true;
                     symbol = tmp;
                 }
                 else
@@ -222,7 +221,7 @@ namespace Evans1
                     }
                     else
                     {
-                        TerminalOutput.LogError("Attempted to resolve invalid expresion!\n\tArithmitic must be performed on exactly 2 terms(detected "+terms.Length+"), skipping: \"" + currentLine + "\"", "Resolving Expresion");
+                        TerminalOutput.LogError("Arithmitic must be performed on exactly 2 terms(detected "+terms.Length+"), skipping: \"" + currentLine + "\"", "Resolving Expresion");
                         rtnVal = false;
                     }
                 }
@@ -242,7 +241,7 @@ namespace Evans1
             }
             else
             {
-                TerminalOutput.LogError("Attempted to resolve invalid expresion!\n\tThere is more than one arithmatic operator indicating 3 or more terms, skipping: \"" + currentLine + "\"", "Resolving Expresion");
+                TerminalOutput.LogError("There is more than one arithmatic operator indicating 3 or more terms, skipping: \"" + currentLine + "\"", "Resolving Expresion");
                 rtnVal = false;
             }
             return rtnVal;
@@ -307,14 +306,14 @@ namespace Evans1
                 tmp.label = digits;
                 tmp.RFlag = false;
                 tmp.MFlag = false;
-                tmp.IFlag = true;
-                tmp.NFlag = false;
-                tmp.XFlag = false;
+                tmp.IBit = true;
+                tmp.Nbit = false;
+                tmp.XBit = false;
                 sym = tmp;
             }
             else
             {
-                TerminalOutput.LogError("Attempted to resolve invalid integer!\n\tUnable to parse integer value, skipping: \"" + currentLine + "\"", "Resolving Expresion");
+                TerminalOutput.LogError("Unable to parse integer value("+digits+"), skipping: \"" + currentLine + "\"", "Resolving Expresion");
                 sym = null;
                 rtnVal = false;
             }
