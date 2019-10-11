@@ -139,17 +139,6 @@ namespace Evans1
             }
             if (rtnVal == true)
             {
-                foreach (LiteralValue lv in literalTable.TakeWhile( lv => { return rtnVal; }))//super slow... but linked lists are...
-                {
-                    if (lv.label == literal)
-                    {
-                        rtnVal = false;
-                        TerminalOutput.LogError("This literal is already in the literal table!", "Adding Literal");
-                    }
-                }
-            }
-            if (rtnVal == true)
-            {
                 literalValue.address = count;
                 TerminalOutput.LogInfo("Adding: "+literalValue.label, "Adding Literal");
                 literalTable.AddLast(literalValue);
