@@ -47,9 +47,9 @@ namespace Evans1
         //***  IN/OUT ARGS   :  N/A  
         //***  RETURN :  N/A
         //************************************************************************
-        public void PrintTable(TerminalOutput.OutputOptions outputOptions = TerminalOutput.OutputOptions.IGNORE)
+        public void PrintTable(Chronicler.OutputOptions outputOptions = Chronicler.OutputOptions.IGNORE)
         {
-            TerminalOutput.WriteLine("NAME\t\tVALUE\t\tLENGTH\tADDRESS", outputOptions);
+            Chronicler.WriteLine("NAME\t\tVALUE\t\tLENGTH\tADDRESS", outputOptions);
             StringBuilder sb = new StringBuilder("");
             foreach (LiteralValue lv in literalTable)
             {
@@ -58,16 +58,16 @@ namespace Evans1
                 {
                     sb.Append(" ");
                 }
-                TerminalOutput.Write(lv.label + sb.ToString(), outputOptions);
+                Chronicler.Write(lv.label + sb.ToString(), outputOptions);
                 sb.Clear();
                 for (int x = 0; x < (16 - lv.value.Length); x++)
                 {
                     sb.Append(" ");
                 }
-                TerminalOutput.Write(lv.value+sb.ToString(), outputOptions);
-                TerminalOutput.Write(lv.Length.ToString(), outputOptions);
-                TerminalOutput.Write("\t" + lv.address.ToString(), outputOptions);
-                TerminalOutput.NewLine(outputOptions);
+                Chronicler.Write(lv.value+sb.ToString(), outputOptions);
+                Chronicler.Write(lv.Length.ToString(), outputOptions);
+                Chronicler.Write("\t" + lv.address.ToString(), outputOptions);
+                Chronicler.NewLine(outputOptions);
             }
         }
 
@@ -104,7 +104,7 @@ namespace Evans1
             }
             else
             {
-                TerminalOutput.LogError("Invalid literal type, please indicate hex\'X\' or Char\'C\'", "Adding Literal");
+                Chronicler.LogError("Invalid literal type, please indicate hex\'X\' or Char\'C\'", "Adding Literal");
                 rtnVal = false;
             }
             literalValue.label = literal;
@@ -113,7 +113,7 @@ namespace Evans1
             {
                 if(literal[2] != '\'' || '\'' != literal[literal.Length-1])
                 {
-                    TerminalOutput.LogError("Invalid enclosing symbols, please surround your literal with \n\tsingle quotes '\'' and remove any trailing garbage from the expresion", "Adding Literal");
+                    Chronicler.LogError("Invalid enclosing symbols, please surround your literal with \n\tsingle quotes '\'' and remove any trailing garbage from the expresion", "Adding Literal");
                     rtnVal = false;
                 }
             }
@@ -133,14 +133,14 @@ namespace Evans1
                     if (validateHex(literalValue.value) != true)
                     {
                         rtnVal = false;
-                        TerminalOutput.LogError("Error in literal, Hex specified, but non Hex chars were detected", "Adding Literal");
+                        Chronicler.LogError("Error in literal, Hex specified, but non Hex chars were detected", "Adding Literal");
                     }
                 }
             }
             if (rtnVal == true)
             {
                 literalValue.address = count;
-                TerminalOutput.LogInfo("Adding: "+literalValue.label, "Adding Literal");
+                Chronicler.LogInfo("Adding: "+literalValue.label, "Adding Literal");
                 literalTable.AddLast(literalValue);
                 count++;
             }

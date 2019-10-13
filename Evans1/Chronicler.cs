@@ -13,7 +13,7 @@ namespace Evans1
      //*****************************************************************************
      //*** DESCRIPTION :   This class handles holding output and output filters
      //*****************************************************************************
-    class TerminalOutput
+    class Chronicler
     {
         private static int count = 1;
         public static int LinesBeforeHolding = 20;

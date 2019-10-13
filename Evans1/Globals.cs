@@ -48,9 +48,9 @@ namespace Evans1
             //***  IN/OUT ARGS   :  N/A  
             //***  RETURN :  N/A
             //************************************************************************
-            public void Print(TerminalOutput.OutputOptions outputOptions)
+            public void Print(Chronicler.OutputOptions outputOptions)
             {
-                TerminalOutput.WriteLine(label + "\t" + RFlag + "\t" + value + "\t" + MFlag + "\t" + IFlag, outputOptions);
+                Chronicler.WriteLine(label + "\t" + RFlag + "\t" + value + "\t" + MFlag + "\t" + IFlag, outputOptions);
             }
             //************************************************************************
             //***  FUNCTION operator + 
