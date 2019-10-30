@@ -19,6 +19,15 @@ namespace Evans1
     //*********************************************************************
     class Globals
     {
+        public class DataStructures
+        {
+            public SymbolTable symbolTable = new SymbolTable();
+            public LiteralTable literalTable = new LiteralTable();
+            public opcodeTable opcodeTable = new opcodeTable();
+            public List<ExpresionData> expresionData = new List<ExpresionData>();
+        }
+
+
         //*********************************************************************
         //*** Struct : Symbol
         //*********************************************************************
@@ -34,11 +43,7 @@ namespace Evans1
 
             //deduced data
             public bool IFlag;
-            public bool IBit;
             public bool MFlag;
-
-            public bool Nbit;
-            public bool XBit;
             //************************************************************************
             //***  FUNCTION Print 
             //*** ********************************************************************
@@ -53,87 +58,131 @@ namespace Evans1
                 Chronicler.WriteLine(label + "\t" + RFlag + "\t" + value + "\t" + MFlag + "\t" + IFlag, outputOptions);
             }
             //************************************************************************
-            //***  FUNCTION operator + 
+            //***  FUNCTION AddRFlags 
             //*** ********************************************************************
-            //***  DESCRIPTION  :  adds 2 symbols 
+            //***  DESCRIPTION  :  adds 2 symbols  rflags
             //***  INPUT ARGS   :  Symbol first, Symbol second
             //***  OUTPUT ARGS :  N/A
             //***  IN/OUT ARGS   :  N/A  
-            //***  RETURN :  Symbol? rtnVal
+            //***  RETURN :  bool? rtnVal
             //************************************************************************
-            static public Symbol? operator +(Symbol first, Symbol second)
+            static public bool? AddRFlags(Symbol first, Symbol second)
             {
-                Symbol? rtnVal = null;
-                Symbol tmp = default;
-                tmp.label = "";
-                tmp.Nbit = first.Nbit | second.Nbit;
-                tmp.IBit = true;
-                tmp.XBit = false;
-                tmp.MFlag = first.MFlag | second.MFlag;
-                tmp.value = first.value + second.value;
-                int rVal = (((int)(BoolConverter)first.RFlag) << 1) + ((int)(BoolConverter)second.RFlag);
+                bool? rtnVal = null;
+                int rVal = (first.RFlag.ToInt() << 1) + second.RFlag.ToInt();
                 switch (rVal)
                 {
                     case 0b00:
-                        tmp.RFlag = false;
-                        rtnVal = tmp;
+                        rtnVal = false;
                         break;
                     case 0b01:
-                        tmp.RFlag = true;
-                        rtnVal = tmp;
+                        rtnVal = true;
                         break;
                     case 0b10:
-                        tmp.RFlag = true;
-                        rtnVal = tmp;
+                        rtnVal = true;
                         break;
                     case 0b11:
+                        rtnVal = null;
                         //do nothing and return null
                         break;
                 }
                 return rtnVal;
             }
             //************************************************************************
-            //***  FUNCTION operator - 
+            //***  FUNCTION SubtractRFlags
             //*** ********************************************************************
-            //***  DESCRIPTION  :  subtracts 2 symbols 
+            //***  DESCRIPTION  :  subtracts 2 symbols rflags
             //***  INPUT ARGS   :  Symbol first, Symbol second
             //***  OUTPUT ARGS :  N/A
             //***  IN/OUT ARGS   :  N/A  
-            //***  RETURN :  Symbol? rtnVal
+            //***  RETURN :  bool? rtnVal
             //************************************************************************
-            static public Symbol? operator -(Symbol first, Symbol second)
+            static public bool? SubtractRFlags(Symbol first, Symbol second)
             {
-                Symbol? rtnVal = null;
-                Symbol tmp = default;
-                tmp.label = "";
-                tmp.Nbit = first.Nbit | second.Nbit;
-                tmp.IBit = true;
-                tmp.XBit = false;
-                tmp.MFlag = first.MFlag | second.MFlag;
-                tmp.value = first.value - second.value;
-                int rVal = (((int)(BoolConverter)first.RFlag) << 1) + ((int)(BoolConverter)second.RFlag);
+                bool? rtnVal = null;
+                int rVal = (first.RFlag.ToInt() << 1) + second.RFlag.ToInt();
                 switch (rVal)
                 {
                     case 0b00:
-                        tmp.RFlag = false;
-                        rtnVal = tmp;
+                        rtnVal = false;
                         break;
                     case 0b01:
+                        rtnVal = null;
                         //do nothing and return null
                         break;
                     case 0b10:
-                        tmp.RFlag = true;
-                        rtnVal = tmp;
+                        rtnVal = true;
                         break;
                     case 0b11:
-                        tmp.RFlag = false;
-                        rtnVal = tmp;
+                        rtnVal = false;
                         break;
                 }
                 return rtnVal;
             }
         }
-
+        public class ExpresionData
+        {
+            public enum Contents { SYMBOL, LITERAL, EMPTY, ERROR };
+            public enum Arithmetic { ADD, SUBTRACT};
+            public LiteralTable.LiteralValue? literal;
+            public Symbol? first;
+            public Arithmetic? operatorValue;
+            public bool? rflag;
+            public Symbol? second;
+            public bool N;
+            public bool I;
+            public bool X;
+            public bool B;
+            public bool P;
+            public bool E;
+            public bool IsValidContent
+            {
+                get
+                {
+                    if(literal!=null)
+                    {
+                        if (first != null || second != null || operatorValue != null)
+                            return false;
+                    }
+                    else
+                    {
+                        if ((second != null || operatorValue != null) && first == null)
+                            return false;
+                        if ((first != null && second != null) && operatorValue == null)
+                            return false;
+                    }
+                    return true;
+                }
+            }
+            public bool IsSymbol => first != null;
+            public Contents ExpresionType
+            {
+                get
+                {
+                    if (IsValidContent != true)
+                        return Contents.ERROR;
+                    else if (literal != null)
+                        return Contents.LITERAL;
+                    else if (IsSymbol)
+                        return Contents.SYMBOL;
+                    else
+                        return Contents.EMPTY;
+                }
+            }
+            public ExpresionData()
+            {
+                literal = null;
+                first=null;
+                operatorValue = null;
+                second = null;
+                N=false;
+                I=false;
+                X=false;
+                B=false;
+                P=false;
+                E=false;
+            }
+        }
         //************************************************************************
         //***  FUNCTION CharArrToHexStr
         //*** ********************************************************************
@@ -161,40 +210,18 @@ namespace Evans1
     //*********************************************************************
     //*** DESCRIPTION :   converts a bool to int implicitly
     //*********************************************************************
-    struct BoolConverter
+    public static class BoolConverter
     {
-        bool myBool;
         //************************************************************************
-        //***  FUNCTION implicit operator BoolConverter
+        //***  FUNCTION ToInt
         //*** ********************************************************************
-        //***  DESCRIPTION  :  converts bool to BoolConverter
-        //***  INPUT ARGS   :  bool first
+        //***  DESCRIPTION  :  converts Bool to int
+        //***  INPUT ARGS   :  bool boolean
         //***  OUTPUT ARGS :  N/A
         //***  IN/OUT ARGS   :  N/A  
-        //***  RETURN :  BoolConverter boolConverter
+        //***  RETURN :  int N/A
         //************************************************************************
-        public static implicit operator BoolConverter(bool first)
-        {
-            BoolConverter boolConverter=default;
-            boolConverter.myBool = first;
-            return boolConverter;
-        }
-        //************************************************************************
-        //***  FUNCTION implicit operator BoolConverter
-        //*** ********************************************************************
-        //***  DESCRIPTION  :  converts BoolConverter to int
-        //***  INPUT ARGS   :  BoolConverter first
-        //***  OUTPUT ARGS :  N/A
-        //***  IN/OUT ARGS   :  N/A  
-        //***  RETURN :  bool N/A
-        //************************************************************************
-        public static implicit operator int(BoolConverter first)
-        {
-            if (first.myBool)
-                return 1;
-            else
-                return 0;
-        }
+        public static int ToInt(this bool boolean) => boolean ? 1 : 0;
     }
     //*********************************************************************
     //*** class : AsciiComparer

@@ -31,12 +31,11 @@ namespace Evans1
         static void Main(string[] args)
         {
             Chronicler.WriteLine("Loading symbols...");
-            SymbolTable symbolTable = new SymbolTable();
-            LiteralTable literalTable = new LiteralTable();
-            symbolTable.LoadSymbols("../../../SYMBOLS.DAT");
+            Globals.DataStructures dataStructures = new Globals.DataStructures();
+            //dataStructures.symbolTable.LoadSymbols("../../../SYMBOLS.DAT");
             Chronicler.HoldOutput(Chronicler.OutputOptions.INFO);
             Chronicler.WriteLine("Current symbol table values after loading:");
-            symbolTable.Print();
+            dataStructures.symbolTable.Print();
             Chronicler.NewLine();
             Chronicler.NewLine();
 
@@ -54,9 +53,8 @@ namespace Evans1
             Chronicler.NewLine();
             Chronicler.NewLine();
             //symbolTable.SearchSymbols("../../../" + filePath);
-            ExpresionHandler.ParseExpresionFile(symbolTable, literalTable, "../../../" + filePath);
             Chronicler.HoldOutput();
-            literalTable.PrintTable();
+            dataStructures.literalTable.PrintTable();
         }
     }
 }

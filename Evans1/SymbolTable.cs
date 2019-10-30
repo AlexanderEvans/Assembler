@@ -40,9 +40,6 @@ namespace Evans1
             Globals.Symbol symbol = default;
             symbol.label = "";
             symbol.IFlag = true;
-            symbol.IBit = true;
-            symbol.Nbit = true;
-            symbol.XBit = false;
             char[] tmpLabel = new char[7];
 
             //discard line flag
@@ -157,13 +154,48 @@ namespace Evans1
             }
         }
 
+        public bool addSymbol(string label, bool rflag, int value, string currentLine)
+        {
+            if (ValidateLabel(label, currentLine, "Pass One adding symbol"))
+            {
+                Globals.Symbol newSym = default;
+                newSym.label = label;
+                if(newSym.label.Length>6)
+                    newSym.label = newSym.label.Substring(0,6);
+                newSym.RFlag = rflag;
+                newSym.value = value;
+                newSym.MFlag = false;
+                if (SymbolTableBST.ContainsKey(newSym.label))
+                {
+                    Chronicler.LogError("Symbol with same Label('" + newSym.label + "') already exists!  Setting MFlag and \n\tskipping: \"" + currentLine + "\"" + "\n", "Adding Symbol");
+                    Globals.Symbol sym = SymbolTableBST.GetValueOrDefault(newSym.label);
+                    if (sym.MFlag == false)
+                    {
+                        sym.MFlag = true;
+                        SymbolTableBST.Remove(newSym.label);
+                        SymbolTableBST.Add(newSym.label, sym);
+                    }
+                    return false;
+                }
+                else
+                {
+                    Chronicler.Write("Adding symbol: ", Chronicler.OutputOptions.INFO);
+                    newSym.Print(Chronicler.OutputOptions.INFO);
+                    SymbolTableBST.Add(newSym.label, newSym);
+                }
+            }
+            else
+                return false;
+            return true;
+        }
+
         //******************************************************************************
         //***  FUNCTION TestAndSetRFlag 
         //*** **************************************************************************
         //***  DESCRIPTION  :  maps rflag string vals to boolean vals
-        //***  INPUT ARGS   :  string rFlagIn, out bool rFlagOut, string currentLine,
+        //***  INPUT ARGS   :  string rFlagIn, string currentLine,
         //***                   string errorPrefix = ""
-        //***  OUTPUT ARGS :  N/A
+        //***  OUTPUT ARGS :  bool rFlagOut
         //***  IN/OUT ARGS   :  N/A  
         //***  RETURN :  bool discardLine
         //******************************************************************************

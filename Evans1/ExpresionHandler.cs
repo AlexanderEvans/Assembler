@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace Evans1
 {
@@ -56,9 +57,6 @@ namespace Evans1
                                         Chronicler.Write(currentLine + sb.ToString());
                                         Chronicler.Write(symbol.Value.value.ToString());
                                         Chronicler.Write("\t" + ((symbol.Value.RFlag) ? "RELOCATABLE" : "ABSOLUTE"));
-                                        Chronicler.Write("\t" + ((symbol.Value.Nbit) ? "1" : "0"));
-                                        Chronicler.Write("\t" + ((symbol.Value.IBit) ? "1" : "0"));
-                                        Chronicler.Write("\t" + ((symbol.Value.XBit) ? "1" : "0"));
                                         Chronicler.NewLine();
                                     }
                                 }
@@ -95,24 +93,22 @@ namespace Evans1
         //***  IN/OUT ARGS   :  N/A  
         //***  RETURN :  bool rtnVal
         //*******************************************************************************************
-        public static bool ResolveF3F4Expresion(SymbolTable symbolTable, LiteralTable literalTable, string expresion, string currentLine, out Globals.Symbol? symbol)
+        public static bool ResolveF3F4Expresion(Globals.DataStructures dataStructures, string expresionString, string currentLine, out Globals.ExpresionData expresion)
         {
-            symbol = null;
+            expresion = default;
             bool rtnVal = true;
-            expresion = expresion.Trim();
-            if (expresion[0] == '@')
+            Regex testXValue = new Regex(@"(^[^=][^,;]*(?<x>,x|X){0,1}.*$)|(^\h*=.*$)");
+            bool hasXValue = testXValue.Match(expresionString).Groups["x"].Value != "";
+            expresionString = expresionString.Trim();
+            if (expresionString[0] == '@')
             {
-                if (!((expresion[expresion.Length - 1] == 'X' || expresion[expresion.Length - 1] == 'x') && expresion[expresion.Length - 2] == ','))
+                expresionString = expresionString.Substring(1, expresionString.Length - 1);
+                hasXValue = testXValue.Match(expresionString).Groups["x"].Value != "";
+                if (hasXValue != true)
                 {
-                    expresion = expresion.Substring(1, expresion.Length - 1);
-                    if (ParseTerms(symbolTable, literalTable, expresion, currentLine, out symbol))
-                    {
-                        Globals.Symbol tmp = symbol.Value;
-                        tmp.Nbit = true;
-                        tmp.IBit = false;
-                        symbol = tmp;
-                    }
-                    else
+                    expresion.N = true;
+                    expresion.I = false;
+                    if (ParseTerms(dataStructures, expresionString, currentLine, out expresion)!=true)
                     {
                         rtnVal = false;
                     }
@@ -123,19 +119,15 @@ namespace Evans1
                     Chronicler.LogError("Can not apply both indirect adressing \n\tand x register indexing, skipping: \"" + currentLine + "\"", "Resovling Expresion");
                 }
             }
-            else if (expresion[0] == '#')
+            else if (expresionString[0] == '#')
             {
-                if (!((expresion[expresion.Length - 1] == 'X' || expresion[expresion.Length - 1] == 'x') && expresion[expresion.Length - 2] == ','))
+                expresionString = expresionString.Substring(1, expresionString.Length - 1);
+                hasXValue = testXValue.Match(expresionString).Groups["x"].Value != "";
+                if (hasXValue != true)
                 {
-                    expresion = expresion.Substring(1, expresion.Length - 1);
-                    if (ParseTerms(symbolTable, literalTable, expresion, currentLine, out symbol))
-                    {
-                        Globals.Symbol tmp = symbol.Value;
-                        tmp.Nbit = false;
-                        tmp.IBit = true;
-                        symbol = tmp;
-                    }
-                    else
+                    expresion.N = false;
+                    expresion.I = false;
+                    if (ParseTerms(dataStructures, expresionString, currentLine, out expresion)!=true)
                     {
                         rtnVal = false;
                     }
@@ -146,25 +138,20 @@ namespace Evans1
                     Chronicler.LogError("Can not apply both immediate adressing \n\tand x register indexing, skipping:\"" + currentLine + "\"", "Resovling Expresion");
                 }
             }
-            else if ((expresion[expresion.Length-1] == 'X' || expresion[expresion.Length - 1] == 'x') && expresion[expresion.Length - 2] == ',')
+            else if (hasXValue == true)
             {
-                expresion = expresion.Substring(0, expresion.Length - 2);
-                if (ParseTerms(symbolTable, literalTable, expresion, currentLine, out symbol))
-                {
-                    Globals.Symbol tmp = symbol.Value;
-                    tmp.Nbit = true;
-                    tmp.IBit = true;
-                    tmp.XBit = true;
-                    symbol = tmp;
-                }
-                else
+                expresion.N = true;
+                expresion.I = true;
+                expresion.X = true;
+                expresionString = testXValue.Replace(expresionString, "$2$4$5");
+                if (ParseTerms(dataStructures, expresionString, currentLine, out expresion)!=true)
                 {
                     rtnVal = false;
                 }
             }
             else
             {
-                rtnVal = ParseTerms(symbolTable, literalTable, expresion, currentLine, out symbol);
+                rtnVal = ParseTerms(dataStructures, expresionString, currentLine, out expresion);
             }
             return rtnVal;
         }
@@ -179,70 +166,114 @@ namespace Evans1
         //***  IN/OUT ARGS   :  N/A  
         //***  RETURN :  bool rtnVal
         //*******************************************************************************************
-        static bool ParseTerms(SymbolTable symbolTable, LiteralTable literalTable, string expresion, string currentLine, out Globals.Symbol? result)
+        static bool ParseTerms(Globals.DataStructures dataStructures, string expresionString, string currentLine, out Globals.ExpresionData expresionData)
         {
-            result = null;
             bool rtnVal=true;
-            expresion = expresion.Trim();
-            int arithmaticOperatorCount = expresion.CountStringCharachters(out List<char> found, '+', '-');
-            if (arithmaticOperatorCount <= 1)
+            expresionString = expresionString.Trim();
+            expresionData = new Globals.ExpresionData();
+
+            if (expresionString[0] == '=')//literals
             {
-                if (found.Count == 1)
+                string line = expresionString.Trim();
+                if (rtnVal == true && (Regex.Match(line, "^=[XxCc].*").Success != true))
                 {
-                    string[] terms = expresion.Split('+', StringSplitOptions.RemoveEmptyEntries);
-                    if(terms.Length==1)
-                        terms = expresion.Split('-', StringSplitOptions.RemoveEmptyEntries);
-                    if (terms.Length == 2)
+                    rtnVal = false;
+                    Chronicler.LogError("Valid literal flags are: \"CcXx\"\n but '" + line[1] + "' was read", "parsing literal");
+                }
+                if (rtnVal == true && (Regex.Match(line, "^=[XxCc]'.*").Success != true))
+                {
+                    rtnVal = false;
+                    Chronicler.LogError("Couldn't detect opening apostrophe: '''", "parsing literal");
+                }
+                if (rtnVal == true && (Regex.Match(line, "^=[XxCc]'[^']*'.*").Success != true))
+                {
+                    rtnVal = false;
+                    Chronicler.LogError("Couldn't detect closing apostrophe: '''", "parsing literal");
+                }
+                if (rtnVal == true && (Regex.Match(line, @"^(=[XxCc]'[^']*')\h{0,}(;.*){0,1}$").Success != true))
+                {
+                    rtnVal = false;
+                    Chronicler.LogWarn("Trailing garbage detected on line outside of comment", "parsing literal");
+                }
+                if(rtnVal == true)
+                {
+                    Match fullLine = (Regex.Match(line, @"^(?<literal>=[XxCc]'[^']*')\h{0,}(?<comment>;.*){0,1}$"));
+
+                    if (fullLine.Success!=true)
                     {
-                        Globals.Symbol? first;
-                        Globals.Symbol? second;
-                        terms[0] = terms[0].Trim();
-                        terms[1] = terms[1].Trim();
-                        if(ParseTerm(symbolTable, terms[0], out first, currentLine)==true && ParseTerm(symbolTable, terms[1], out second, currentLine)==true)
+                        rtnVal = false;
+                        Chronicler.WriteLine("Error parsing literal");
+                    }
+                    else
+                    {
+                        string literal = fullLine.Groups["literal"].Value;
+
+                        if (dataStructures.literalTable.add(literal) != true)
+                            rtnVal = false;
+
+                        dataStructures.literalTable.TryGetLiteral(literal, out expresionData.literal);
+                    }
+                }
+            }
+            else//symbols and/or numbers
+            {
+                string line = expresionString.Trim();
+                if (rtnVal == true && (Regex.Match(line, @"^\h{0,}(-{0,1}\h{0,}[A-Za-z0-9]+).*$").Success != true))
+                {
+                    rtnVal = false;
+                    Chronicler.LogError("Could not parse first term in: " + currentLine, "parsing terms");
+                }
+                if (rtnVal == true && (Regex.Match(line, @"^\h{0,}(-{0,1}\h{0,}[A-Za-z0-9]+)\h{0,}(([+-])\h{0,}(-{0,1}\h{0,}[A-Za-z0-9]+)){0,1}\h{0,}(;.*){0,1}$").Success != true))
+                {
+                    rtnVal = false;
+                    Chronicler.LogError("Couldn't parse second term in: "+currentLine, "parsing terms");
+                }
+                string first="";
+                string arithmaticOperator="";
+                string second ="";
+                if (rtnVal == true)
+                {
+                    Match fullLine = (Regex.Match(line, @"^\h{0,}(?<first>-{0,1}\h{0,}[A-Za-z0-9]+)\h{0,}(?<testTermCount>(?<operand>[+-])\h{0,}(?<second>-{0,1}\h{0,}[A-Za-z0-9]+)){0,1}\h{0,}(;.*){0,1}$"));
+                    if (fullLine.Success != true)
+                    {
+                        rtnVal = false;
+                        Chronicler.WriteLine("Error parsing literal");
+                    }
+                    first = fullLine.Groups["first"].Value;
+                    arithmaticOperator = fullLine.Groups["operand"].Value;
+                    second = fullLine.Groups["second"].Value;
+
+                    Regex stripWhiteSpace = new Regex(@"\s+");
+                    first = stripWhiteSpace.Replace(first, "");
+                    arithmaticOperator = stripWhiteSpace.Replace(arithmaticOperator, "");
+                    second = stripWhiteSpace.Replace(second, "");
+                    if (second != "" && arithmaticOperator == "")
+                        rtnVal = false;
+                }
+                if(rtnVal == true)
+                {
+                    rtnVal = ParseTerm(dataStructures.symbolTable, first, out expresionData.first, currentLine);
+                    if(second!=null)
+                    {
+                        if (arithmaticOperator == "+")
                         {
-                            if (found.Contains('+'))
-                            {
-                                result = first.Value + second.Value;
-                            }
-                            else
-                            {
-                                result = first.Value - second.Value;
-                            }
-                            if (result == null)
-                            {
-                                rtnVal = false;
-                                Chronicler.LogDetailedInfo("\t...Arithmetic operation in Expresion Handler failed");
-                            }
+                            expresionData.rflag = Globals.Symbol.AddRFlags(expresionData.first.Value, expresionData.second.Value);
+                            expresionData.operatorValue = Globals.ExpresionData.Arithmetic.ADD;
+                        }
+                        else if (arithmaticOperator == "-")
+                        {
+                            expresionData.rflag = Globals.Symbol.SubtractRFlags(expresionData.first.Value, expresionData.second.Value);
+                            expresionData.operatorValue = Globals.ExpresionData.Arithmetic.SUBTRACT;
                         }
                         else
                         {
                             rtnVal = false;
+                            Chronicler.LogError("Invalid operator value for line: " + currentLine, "term arithmatic module");
                         }
-                    }
-                    else
-                    {
-                        Chronicler.LogError("Arithmitic must be performed on exactly 2 terms(detected "+terms.Length+"), skipping: \"" + currentLine + "\"", "Resolving Expresion");
-                        rtnVal = false;
+                        rtnVal = rtnVal == true ? ParseTerm(dataStructures.symbolTable, second, out expresionData.second, currentLine) : false;
+                        
                     }
                 }
-                else
-                {
-                    if (expresion[0] == '=')
-                    {
-                        if (literalTable.add(expresion) != true)
-                            rtnVal = false;
-                    }
-                    else
-                    {
-                        if (ParseTerm(symbolTable, expresion, out result, currentLine)!=true)
-                            rtnVal = false;
-                    }
-                }
-            }
-            else
-            {
-                Chronicler.LogError("There is more than one arithmatic operator indicating 3 or more terms, skipping: \"" + currentLine + "\"", "Resolving Expresion");
-                rtnVal = false;
             }
             return rtnVal;
         }
@@ -259,7 +290,7 @@ namespace Evans1
         static bool ParseTerm(SymbolTable symbolTable, string term, out Globals.Symbol? sym, string currentLine)
         {
             bool rtnVal = true;
-            if (char.IsDigit(term[0]))
+            if (char.IsDigit(term[0]) || term[0]=='-')
             {
                 sym = null;
                 if (ParseNum(term, out Globals.Symbol? tmp, currentLine) == true)
@@ -306,9 +337,6 @@ namespace Evans1
                 tmp.label = digits;
                 tmp.RFlag = false;
                 tmp.MFlag = false;
-                tmp.IBit = true;
-                tmp.Nbit = false;
-                tmp.XBit = false;
                 sym = tmp;
             }
             else

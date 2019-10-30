@@ -37,6 +37,30 @@ namespace Evans1
         }
         int count = 0;
         LinkedList<LiteralValue> literalTable = new LinkedList<LiteralValue>();
+        //************************************************************************
+        //***  FUNCTION TryGetLiteral
+        //*** ********************************************************************
+        //***  DESCRIPTION  :  trys to get a literal and returns false on failure
+        //***  INPUT ARGS   :  string literal
+        //***  OUTPUT ARGS :  LiteralValue literalValue
+        //***  IN/OUT ARGS   :  N/A  
+        //***  RETURN :  bool found
+        //************************************************************************
+        public bool TryGetLiteral(string literal, out LiteralValue? literalValue)
+        {
+            literalValue = null;
+            bool found = false;
+            foreach(LiteralValue Lit in literalTable.TakeWhile(x => found))
+            {
+                if(Lit.label==literal)
+                {
+                    literalValue = Lit;
+                    found = true;
+                }
+            }
+            return found;
+        }
+
 
         //************************************************************************
         //***  FUNCTION PrintTable 
