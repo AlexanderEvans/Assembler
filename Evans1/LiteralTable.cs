@@ -21,7 +21,7 @@ namespace Evans1
     //*** DESCRIPTION :   Stores a single literal's information using a
     //***                   Linked list
     //*********************************************************************
-    class LiteralTable
+    public class LiteralTable
     {
         //*********************************************************************
         //*** struct : LiteralValue
@@ -30,10 +30,13 @@ namespace Evans1
         //*********************************************************************
         public struct LiteralValue
         {
+            public enum DataType { HEX, CHAR}
+            public DataType dataType;
+            public bool isOldStyleLiteral;
             public string label;
-            public string value;
+            public string hexValue;
             public int address;
-            public int Length => value.Length / 2;
+            public int Length => hexValue.Length / 2;
         }
         int count = 0;
         LinkedList<LiteralValue> literalTable = new LinkedList<LiteralValue>();
@@ -84,11 +87,11 @@ namespace Evans1
                 }
                 Chronicler.Write(lv.label + sb.ToString(), outputOptions);
                 sb.Clear();
-                for (int x = 0; x < (16 - lv.value.Length); x++)
+                for (int x = 0; x < (16 - lv.hexValue.Length); x++)
                 {
                     sb.Append(" ");
                 }
-                Chronicler.Write(lv.value+sb.ToString(), outputOptions);
+                Chronicler.Write(lv.hexValue+sb.ToString(), outputOptions);
                 Chronicler.Write(lv.Length.ToString(), outputOptions);
                 Chronicler.Write("\t" + lv.address.ToString(), outputOptions);
                 Chronicler.NewLine(outputOptions);
@@ -104,94 +107,11 @@ namespace Evans1
         //***  IN/OUT ARGS   :  N/A  
         //***  RETURN :  bool rtnVal
         //************************************************************************
-        public bool add(string literal)
+        public void add(LiteralValue literalValue)
         {
-            bool rtnVal = true;
-            bool isChar = default;
-            LiteralValue literalValue = default;
-            literal = literal.CompactAndTrimWhitespaces();
-            if (literal[1] == 'X' || literal[1] == 'x')
-            {
-                literal = literal.ToUpper();
-                isChar = false;
-            }
-            else if (literal[1] == 'C' )
-            {
-                isChar = true;
-            }
-            else if (literal[1] == 'c')
-            {
-                isChar = true;
-                StringBuilder sb = new StringBuilder(literal);
-                sb[1] = 'C';
-                literal = sb.ToString();
-            }
-            else
-            {
-                Chronicler.LogError("Invalid literal type, please indicate hex\'X\' or Char\'C\'", "Adding Literal");
-                rtnVal = false;
-            }
-            literalValue.label = literal;
-
-            if (rtnVal==true)
-            {
-                if(literal[2] != '\'' || '\'' != literal[literal.Length-1])
-                {
-                    Chronicler.LogError("Invalid enclosing symbols, please surround your literal with \n\tsingle quotes '\'' and remove any trailing garbage from the expresion", "Adding Literal");
-                    rtnVal = false;
-                }
-            }
-
-            if (rtnVal == true)
-            {
-                if(isChar==true)
-                {
-                    char[] tmpArr = literal.Substring(3, literal.Length - 4).ToCharArray();
-                    literalValue.value = Globals.CharArrToHexStr(tmpArr);
-
-                }
-                else
-                {
-                    literalValue.value = literal.Substring(3, literal.Length - 4);
-                    literalValue.value = (literalValue.value.Length % 2 == 1 ? "0" : "") + literalValue.value;
-                    if (validateHex(literalValue.value) != true)
-                    {
-                        rtnVal = false;
-                        Chronicler.LogError("Error in literal, Hex specified, but non Hex chars were detected", "Adding Literal");
-                    }
-                }
-            }
-            if (rtnVal == true)
-            {
-                literalValue.address = count;
-                Chronicler.LogInfo("Adding: "+literalValue.label, "Adding Literal");
-                literalTable.AddLast(literalValue);
-                count++;
-            }
-            return rtnVal;
+            literalTable.AddLast(literalValue);
         }
 
-        //************************************************************************
-        //***  FUNCTION validateHex 
-        //*** ********************************************************************
-        //***  DESCRIPTION  :  Ensures all chars of a string are hex digists
-        //***  INPUT ARGS   :  string charStr
-        //***  OUTPUT ARGS :  N/A
-        //***  IN/OUT ARGS   :  N/A  
-        //***  RETURN :  bool isHex
-        //************************************************************************
-        bool validateHex(string charStr)
-        {
-            charStr = charStr.ToUpper();
-            bool isHex = true;
-            foreach (char c in charStr.TakeWhile(c => { return isHex; }))
-            {
-                if (!(char.IsDigit(c) || (((int)c) >= 'A' && ((int)c) <= 'F')))
-                {
-                    isHex = false;
-                }
-            }
-            return isHex;
-        }
+
     }
 }

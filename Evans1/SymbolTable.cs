@@ -271,10 +271,20 @@ namespace Evans1
         //***  IN/OUT ARGS   :  N/A  
         //***  RETURN :  Symbol? 
         //************************************************************************
-        public bool SearchSymbol(string str, out Globals.Symbol? tempN)
+        public bool SearchSymbol(string str, string currentLine, out Globals.Symbol? tempN)
         {
             bool rtnVal = true;
             tempN = null;
+            str = str.Trim();
+
+            if (ValidateLabel(str, currentLine, "Searching symbol"))
+            {
+                if (str.Length > 6)
+                    str = str.Substring(0, 6);
+            }
+            else
+                return false;
+
             Globals.Symbol temp;
             if (SymbolTableBST.TryGetValue(str, out temp))
             {

@@ -135,6 +135,7 @@ namespace Evans1
             public bool B;
             public bool P;
             public bool E;
+            public string comment = "";
             public bool IsValidContent
             {
                 get

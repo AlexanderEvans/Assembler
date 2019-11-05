@@ -123,7 +123,7 @@ namespace Evans1
                                             case "EQU":
                                                 skipOperandParsing = true;
                                                 if (expresionLine.operandFieldAndComment[0] == '*')
-                                                    dataStructures.symbolTable.addSymbol(expresionLine.label, 1, locationCounter, currentLine);
+                                                    dataStructures.symbolTable.addSymbol(expresionLine.label, true, locationCounter, currentLine);
                                                 else
                                                 {
                                                     if (ExpresionHandler.ResolveF3F4Expresion(dataStructures, expresionLine.operandFieldAndComment, currentLine, out expresionLine.expresionData) != true)
