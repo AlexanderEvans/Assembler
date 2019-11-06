@@ -11,7 +11,7 @@ namespace Evans1
         public enum OperandType { NEW_STYLE_LITERAL, OLD_STYLE_LITERAL, DISPLACEMENT_OR_ADDRESS}
         public static OperandType guessOperandType(string operand)
         {
-            Regex isNewStyleLiteral = new Regex(@"^\h*=[^;]*'.*$");
+            Regex isNewStyleLiteral = new Regex(@"^[\t ]*=[^;]*'.*$");
             Regex isOldStyleLiteral = new Regex(@"^[^;]*'.*$");
             if (isNewStyleLiteral.IsMatch(operand))
                 return OperandType.NEW_STYLE_LITERAL;
@@ -26,7 +26,7 @@ namespace Evans1
         {
             operand = operand.Trim();
             callingModule = callingModule == "" ? "Parse New Style Literal" : callingModule;
-            literalValue = default;
+            literalValue = new LiteralTable.LiteralValue();
             comment = "";
             if (operand[0] != '=')
             {
@@ -42,9 +42,9 @@ namespace Evans1
 
         public static bool ParseOldStyleLiteral(string operand, out LiteralTable.LiteralValue literalValue, out string comment, string callingModule="")
         {
-            Regex literalRegex = new Regex(@"(^\h*(?<literalCharID>[Cc])\h*(?<literalValueString>'.*')\h*(?<comment>;.*){0,1}$)|(^\h*(?<literalCharIDx>[Xx])\h*(?<literalValueStringx>'[a-fA-F0-9]*')\h*(?<commentx>;.*){0,1}$)");
+            Regex literalRegex = new Regex(@"(^[\t ]*(?<literalCharID>[Cc])[\t ]*(?<literalValueString>'.*')[\t ]*(?<comment>;.*){0,1}$)|(^[\t ]*(?<literalCharIDx>[Xx])[\t ]*(?<literalValueStringx>'[a-fA-F0-9]*')[\t ]*(?<commentx>;.*){0,1}$)");
             Match match = literalRegex.Match(operand);
-            literalValue = default;
+            literalValue = new LiteralTable.LiteralValue();
             comment = "";
 
             if (match.Success)//if we succeed, format it

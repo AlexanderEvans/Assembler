@@ -32,12 +32,6 @@ namespace Evans1
         {
             Chronicler.WriteLine("Loading symbols...");
             Globals.DataStructures dataStructures = new Globals.DataStructures();
-            //dataStructures.symbolTable.LoadSymbols("../../../SYMBOLS.DAT");
-            Chronicler.HoldOutput(Chronicler.OutputOptions.INFO);
-            Chronicler.WriteLine("Current symbol table values after loading:");
-            dataStructures.symbolTable.Print();
-            Chronicler.NewLine();
-            Chronicler.NewLine();
 
             string filePath;
             if (args.Length==0)
@@ -52,9 +46,9 @@ namespace Evans1
             Chronicler.HoldOutput();
             Chronicler.NewLine();
             Chronicler.NewLine();
+            PassOne.Execute(dataStructures, out System.Collections.Generic.List<PassOne.ExpresionLine> expresionLines, "../../../" + filePath);
             //symbolTable.SearchSymbols("../../../" + filePath);
             Chronicler.HoldOutput();
-            dataStructures.literalTable.PrintTable();
         }
     }
 }

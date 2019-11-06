@@ -62,7 +62,6 @@ namespace Evans1
             {"RD"    , new operationData{name = "RD"    , code = 0xD8, format = 3} },
             {"RMO"   , new operationData{name = "RMO"   , code = 0xAC, format = 2} },
             {"RSUB"  , new operationData{name = "RSUB"  , code = 0x4C, format = 3} },
-            {"RSUB"  , new operationData{name = "RSUB"  , code = 0x4C, format = 3} },
             {"SHIFTL", new operationData{name = "SHIFTL", code = 0xA4, format = 2} },
             {"SHIFTR", new operationData{name = "SHIFTR", code = 0xA8, format = 2} },
             {"SIO"   , new operationData{name = "SIO"   , code = 0xF0, format = 1} },

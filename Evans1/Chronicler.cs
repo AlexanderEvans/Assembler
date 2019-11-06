@@ -13,7 +13,7 @@ namespace Evans1
      //*****************************************************************************
      //*** DESCRIPTION :   This class handles holding output and output filters
      //*****************************************************************************
-    class Chronicler
+    public class Chronicler
     {
         private static int count = 1;
         public static int LinesBeforeHolding = 20;
@@ -68,13 +68,14 @@ namespace Evans1
                     {
                         if (i != arr.Length - 1)
                         {
+                            stringBuilder.Append(arr[i]);
+                            stringBuilder.Append('\n');
                             if (count % LinesBeforeHolding == 0)
                             {
                                 Console.Write(stringBuilder);
                                 HoldOutput();
+                                stringBuilder = new StringBuilder("");
                             }
-                            stringBuilder.Append(arr[i]);
-                            stringBuilder.Append('\n');
                             count++;
                         }
                         else

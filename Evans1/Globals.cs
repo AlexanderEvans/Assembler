@@ -55,7 +55,7 @@ namespace Evans1
             //************************************************************************
             public void Print(Chronicler.OutputOptions outputOptions)
             {
-                Chronicler.WriteLine(label + "\t" + RFlag + "\t" + value + "\t" + MFlag + "\t" + IFlag, outputOptions);
+                Chronicler.WriteLine(label + "\t" + RFlag + "\t" + value.ToString("X6") + "\t" + MFlag + "\t" + IFlag, outputOptions);
             }
             //************************************************************************
             //***  FUNCTION AddRFlags 
@@ -124,7 +124,7 @@ namespace Evans1
         {
             public enum Contents { SYMBOL, LITERAL, EMPTY, ERROR };
             public enum Arithmetic { ADD, SUBTRACT};
-            public LiteralTable.LiteralValue? literal;
+            public LiteralTable.LiteralValue literal;
             public Symbol? first;
             public Arithmetic? operatorValue;
             public bool? rflag;

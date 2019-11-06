@@ -156,6 +156,7 @@ namespace Evans1
 
         public bool addSymbol(string label, bool rflag, int value, string currentLine)
         {
+            label = label.Trim();
             if (ValidateLabel(label, currentLine, "Pass One adding symbol"))
             {
                 Globals.Symbol newSym = default;
@@ -229,7 +230,7 @@ namespace Evans1
         //***  IN/OUT ARGS   :  N/A  
         //***  RETURN :  bool isValid
         //******************************************************************************
-        public bool ValidateLabel(string label, string currentLine, string errorPrefix="")
+        public static bool ValidateLabel(string label, string currentLine, string errorPrefix="")
         {
             bool isValid = true;
             if (label.Length > 12)
@@ -271,81 +272,81 @@ namespace Evans1
         //***  IN/OUT ARGS   :  N/A  
         //***  RETURN :  Symbol? 
         //************************************************************************
-        public bool SearchSymbol(string str, string currentLine, out Globals.Symbol? tempN)
+        public bool SearchSymbol(string symbolLabel, string currentLine, out Globals.Symbol? tempN)
         {
             bool rtnVal = true;
             tempN = null;
-            str = str.Trim();
+            symbolLabel = symbolLabel.Trim();
 
-            if (ValidateLabel(str, currentLine, "Searching symbol"))
+            if (ValidateLabel(symbolLabel, currentLine, "Searching symbol"))
             {
-                if (str.Length > 6)
-                    str = str.Substring(0, 6);
+                if (symbolLabel.Length > 6)
+                    symbolLabel = symbolLabel.Substring(0, 6);
             }
             else
                 return false;
 
             Globals.Symbol temp;
-            if (SymbolTableBST.TryGetValue(str, out temp))
+            if (SymbolTableBST.TryGetValue(symbolLabel, out temp))
             {
                 tempN = temp;
             }
             else
             {
-                Chronicler.LogError("Symbol(" + str + ") not found", "Searching for symbol");
+                Chronicler.LogError("Symbol(" + symbolLabel + ") not found", "Searching for symbol");
                 rtnVal = false;
             }
             return rtnVal;
         }
 
-        //************************************************************************
-        //***  FUNCTION SearchSymbol 
-        //*** ********************************************************************
-        //***  DESCRIPTION  :  Takes a file path to parse and validate symbol 
-        //***                   labels which are then search for in the BST and 
-        //***                   the output is dumped to the console
-        //***  INPUT ARGS   :  string filePath
-        //***  OUTPUT ARGS :  N/A
-        //***  IN/OUT ARGS   :  N/A  
-        //***  RETURN :  N/A
-        //************************************************************************
-        public void SearchSymbols(string filePath)
-        {
-            FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, FileOptions.SequentialScan);
-            StreamReader streamReader = new StreamReader(fileStream);
+        ////************************************************************************
+        ////***  FUNCTION SearchSymbol 
+        ////*** ********************************************************************
+        ////***  DESCRIPTION  :  Takes a file path to parse and validate symbol 
+        ////***                   labels which are then search for in the BST and 
+        ////***                   the output is dumped to the console
+        ////***  INPUT ARGS   :  string filePath
+        ////***  OUTPUT ARGS :  N/A
+        ////***  IN/OUT ARGS   :  N/A  
+        ////***  RETURN :  N/A
+        ////************************************************************************
+        //public void SearchSymbols(string filePath)
+        //{
+        //    FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, FileOptions.SequentialScan);
+        //    StreamReader streamReader = new StreamReader(fileStream);
 
-            while (!streamReader.EndOfStream)
-            {
-                //get the line and trim whitespace
-                string currentLine = streamReader.ReadLine().CompactAndTrimWhitespaces();
+        //    while (!streamReader.EndOfStream)
+        //    {
+        //        //get the line and trim whitespace
+        //        string currentLine = streamReader.ReadLine().CompactAndTrimWhitespaces();
 
-                bool discardLine = false;
-                if (currentLine == "")
-                {
-                    Chronicler.LogError("blank line, skipping: \"" + currentLine + "\"" + "\n", "Adding Symbol");
-                    discardLine = true;
-                }
+        //        bool discardLine = false;
+        //        if (currentLine == "")
+        //        {
+        //            Chronicler.LogError("blank line, skipping: \"" + currentLine + "\"" + "\n", "Adding Symbol");
+        //            discardLine = true;
+        //        }
 
-                if (discardLine !=true && ValidateLabel(currentLine, currentLine, "Seeking Symbol"))
-                {
-                    StringBuilder stringBuilder = new StringBuilder();
-                    for (int i = 0; i < currentLine.Length && i < 6; i++)
-                        stringBuilder.Append(currentLine[i]);
+        //        if (discardLine !=true && ValidateLabel(currentLine, currentLine, "Seeking Symbol"))
+        //        {
+        //            StringBuilder stringBuilder = new StringBuilder();
+        //            for (int i = 0; i < currentLine.Length && i < 6; i++)
+        //                stringBuilder.Append(currentLine[i]);
                         
-                    if (SearchSymbol(stringBuilder.ToString(), out Globals.Symbol? temp))
-                    {
-                        Chronicler.Write("Found symbol: ");
-                        temp.Value.Print(Chronicler.OutputOptions.IGNORE);
-                    }
-                    else
-                    {
-                        Chronicler.WriteLine("Symbol(" + currentLine + ") not found");
-                    }
-                }
-            }
-            streamReader.Dispose();
-            fileStream.Dispose();
-        }
+        //            if (SearchSymbol(stringBuilder.ToString(), out Globals.Symbol? temp))
+        //            {
+        //                Chronicler.Write("Found symbol: ");
+        //                temp.Value.Print(Chronicler.OutputOptions.IGNORE);
+        //            }
+        //            else
+        //            {
+        //                Chronicler.WriteLine("Symbol(" + currentLine + ") not found");
+        //            }
+        //        }
+        //    }
+        //    streamReader.Dispose();
+        //    fileStream.Dispose();
+        //}
 
         //************************************************************************
         //***  FUNCTION Print 

@@ -93,62 +93,30 @@ namespace Evans1
         //***  IN/OUT ARGS   :  N/A  
         //***  RETURN :  bool rtnVal
         //*******************************************************************************************
-        public static bool ResolveF3F4Expresion(Globals.DataStructures dataStructures, string expresionString, string currentLine, out Globals.ExpresionData expresionData)
+        public static bool ResolveF3F4Expresion(Globals.DataStructures dataStructures, string expresionString, string currentLine, out Globals.ExpresionData expresionData, string callingModule = "ExpresionHandler")
         {
             expresionData = new Globals.ExpresionData();
             bool rtnVal = true;
-            Regex isLiteral = new Regex(@"^\h*={0,1}\h*[CcXx]\h*'.*$");
-            Regex testXValue = new Regex(@"(^[^=][^,;]*(?<x>,x|X){0,1}.*$)|(^\h*=.*$)");
+            Regex testXValue = new Regex(@"(^[^=][^,;]*(?<x>,x|X){0,1}.*$)|(^[\t ]*=.*$)");
             bool hasXValue = testXValue.Match(expresionString).Groups["x"].Value != "";
             expresionString = expresionString.Trim();
-            if(isLiteral.Match(expresionString).Success)
+            if(Parser.guessOperandType(expresionString) == Parser.OperandType.NEW_STYLE_LITERAL || Parser.guessOperandType(expresionString) == Parser.OperandType.OLD_STYLE_LITERAL)
             {
-                string line = expresionString.Trim();
-                bool isOldStyleLiteral = false;
-                if(line[0]!='=')
+                Chronicler.LogInfo("Parsing as literal: " + expresionString);
+                if (Parser.guessOperandType(expresionString) == Parser.OperandType.NEW_STYLE_LITERAL)
                 {
-                    line = "=" + line;
-                    isOldStyleLiteral = true;
-
+                    LiteralTable.LiteralValue tmp = new LiteralTable.LiteralValue();
+                    string comment = "";
+                    Parser.ParseNewStyleLiteral(expresionString, out tmp, out comment, callingModule);
+                    expresionData.literal = tmp;
+                    dataStructures.literalTable.add(tmp);
                 }
-                if (rtnVal == true && (Regex.Match(line, @"^=*[XxCc].*").Success != true))
+                else if (Parser.guessOperandType(expresionString) == Parser.OperandType.OLD_STYLE_LITERAL)
                 {
-                    rtnVal = false;
-                    Chronicler.LogError("Valid literal flags are: \"CcXx\"\n but '" + line[1] + "' was read", "parsing literal");
-                }
-                if (rtnVal == true && (Regex.Match(line, @"^=*[XxCc]*'.*").Success != true))
-                {
-                    rtnVal = false;
-                    Chronicler.LogError("Couldn't detect opening apostrophe: '''", "parsing literal");
-                }
-                if (rtnVal == true && (Regex.Match(line, @"^=*[XxCc]*'.*'.*").Success != true))
-                {
-                    rtnVal = false;
-                    Chronicler.LogError("Couldn't detect closing apostrophe: '''", "parsing literal");
-                }
-                if (rtnVal == true && (Regex.Match(line, @"^(=[XxCc]'.*'){0,}(;.*){0,1}$").Success != true))
-                {
-                    rtnVal = false;
-                    Chronicler.LogWarn("Trailing garbage detected on line outside of comment", "parsing literal");
-                }
-                if (rtnVal == true)
-                {
-                    Match fullLine = (Regex.Match(line, @"^(?<literal>=[XxCc]'.*')\h{0,}(?<comment>;.*){0,1}$"));
-
-                    if (fullLine.Success != true)
-                    {
-                        rtnVal = false;
-                        Chronicler.WriteLine("Error parsing literal");
-                    }
-                    else
-                    {
-                        string literal = fullLine.Groups["literal"].Value;
-
-                        if (dataStructures.literalTable.add(literal, isOldStyleLiteral) != true)
-                            rtnVal = false;
-
-                        dataStructures.literalTable.TryGetLiteral(literal, out expresionData.literal);
-                    }
+                    LiteralTable.LiteralValue tmp = new LiteralTable.LiteralValue();
+                    string comment = "";
+                    Parser.ParseOldStyleLiteral(expresionString, out tmp, out comment, callingModule);
+                    expresionData.literal = tmp;
                 }
             }
             else if (expresionString[0] == '@')
@@ -223,7 +191,7 @@ namespace Evans1
             expresionString = expresionString.Trim();
             expresionData = new Globals.ExpresionData();
 
-            Regex testForCommentOnlyLine = new Regex(@"^\h*(;.*)$");
+            Regex testForCommentOnlyLine = new Regex(@"^[\t ]*(;.*)$");
             Match commentOnlyLine = testForCommentOnlyLine.Match(expresionString);
             if(commentOnlyLine.Success)
             {
@@ -232,12 +200,12 @@ namespace Evans1
             }
 
             string line = expresionString.Trim();
-            if (rtnVal == true && (Regex.Match(line, @" ^\h{0,}(-{0,1}\h{0,}[A-Za-z0-9]+).*$").Success != true))
+            if (rtnVal == true && (Regex.Match(line, @"^[\t ]{0,}(-{0,1}[\t ]{0,}[A-Za-z0-9]+).*$").Success != true))
             {
                 rtnVal = false;
-                Chronicler.LogError("Could not parse first term in: " + currentLine, "parsing terms");
+                Chronicler.LogError("Could not parse first("+ line + ") term in: " + currentLine, "parsing terms");
             }
-            if (rtnVal == true && (Regex.Match(line, @"^\h{0,}(-{0,1}\h{0,}[A-Za-z0-9]+)\h{0,}(([+-])\h{0,}(-{0,1}\h{0,}[A-Za-z0-9]+)){0,1}\h{0,}(;.*){0,1}$").Success != true))
+            if (rtnVal == true && (Regex.Match(line, @"^[\t ]{0,}(-{0,1}[\t ]{0,}[A-Za-z0-9]+)[\t ]{0,}(([+-])[\t ]{0,}(-{0,1}[\t ]{0,}[A-Za-z0-9]+)){0,1}[\t ]{0,}(;.*){0,1}$").Success != true))
             {
                 rtnVal = false;
                 Chronicler.LogError("Couldn't parse second term in: "+currentLine, "parsing terms");
@@ -247,7 +215,7 @@ namespace Evans1
             string second ="";
             if (rtnVal == true)
             {
-                Match fullLine = (Regex.Match(line, @"^\h{0,}(?<first>-{0,1}\h{0,}[A-Za-z0-9]+)\h{0,}(?<testTermCount>(?<operand>[+-])\h{0,}(?<second>-{0,1}\h{0,}[A-Za-z0-9]+)){0,1}\h{0,}(;.*){0,1}$"));
+                Match fullLine = (Regex.Match(line, @"^[\t ]{0,}(?<first>-{0,1}[\t ]{0,}[A-Za-z0-9]+)[\t ]{0,}(?<testTermCount>(?<operand>[+-])[\t ]{0,}(?<second>-{0,1}[\t ]{0,}[A-Za-z0-9]+)){0,1}[\t ]{0,}(;.*){0,1}$"));
                 if (fullLine.Success != true)
                 {
                     rtnVal = false;
@@ -267,22 +235,30 @@ namespace Evans1
             if(rtnVal == true)
             {
                 rtnVal = ParseTerm(dataStructures.symbolTable, first, out expresionData.first, currentLine);
-                if(second!=null)
+                if(second!="")
                 {
-                    if (arithmaticOperator == "+")
+                    rtnVal = ParseTerm(dataStructures.symbolTable, second, out expresionData.second, currentLine);
+                    if(expresionData.first.HasValue && expresionData.second.HasValue)
                     {
-                        expresionData.rflag = Globals.Symbol.AddRFlags(expresionData.first.Value, expresionData.second.Value);
-                        expresionData.operatorValue = Globals.ExpresionData.Arithmetic.ADD;
-                    }
-                    else if (arithmaticOperator == "-")
-                    {
-                        expresionData.rflag = Globals.Symbol.SubtractRFlags(expresionData.first.Value, expresionData.second.Value);
-                        expresionData.operatorValue = Globals.ExpresionData.Arithmetic.SUBTRACT;
+                        if (arithmaticOperator == "+")
+                        {
+                            expresionData.rflag = Globals.Symbol.AddRFlags(expresionData.first.Value, expresionData.second.Value);
+                            expresionData.operatorValue = Globals.ExpresionData.Arithmetic.ADD;
+                        }
+                        else if (arithmaticOperator == "-")
+                        {
+                            expresionData.rflag = Globals.Symbol.SubtractRFlags(expresionData.first.Value, expresionData.second.Value);
+                            expresionData.operatorValue = Globals.ExpresionData.Arithmetic.SUBTRACT;
+                        }
+                        else
+                        {
+                            rtnVal = false;
+                            Chronicler.LogError("Invalid operator value for line: " + currentLine, "term arithmatic module");
+                        }
                     }
                     else
                     {
-                        rtnVal = false;
-                        Chronicler.LogError("Invalid operator value for line: " + currentLine, "term arithmatic module");
+                        Chronicler.LogError("Couldn't resolve symbols in artithmetic: "+currentLine, "term arithmatic module");
                     }
                     rtnVal = rtnVal == true ? ParseTerm(dataStructures.symbolTable, second, out expresionData.second, currentLine) : false;
                         
@@ -352,7 +328,7 @@ namespace Evans1
         //***  IN/OUT ARGS   :  N/A  
         //***  RETURN :  bool rtnVal
         //*******************************************************************************************
-        static bool ParseNum(string digits, out Globals.Symbol? sym, string currentLine="")
+        static public bool ParseNum(string digits, out Globals.Symbol? sym, string currentLine="")
         {
             Globals.Symbol tmp = default;
             bool rtnVal = true;

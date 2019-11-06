@@ -28,7 +28,7 @@ namespace Evans1
         //*********************************************************************
         //*** DESCRIPTION :   Stores a single literal's information 
         //*********************************************************************
-        public struct LiteralValue
+        public class LiteralValue
         {
             public enum DataType { HEX, CHAR}
             public DataType dataType;
@@ -39,7 +39,28 @@ namespace Evans1
             public int Length => hexValue.Length / 2;
         }
         int count = 0;
-        LinkedList<LiteralValue> literalTable = new LinkedList<LiteralValue>();
+        public LinkedList<LiteralValue> literalTable = new LinkedList<LiteralValue>();
+
+        public void setStartAddress(int newAdress)
+        {
+            if (literalTable.Count!=0)
+            {
+                literalTable.First.Value.address=newAdress;
+            }
+            int prevAdrr = -1;
+            int prevLen = -1;
+            foreach (LiteralValue lv in literalTable)
+            {
+                if(lv!=literalTable.First.Value)
+                {
+                    lv.address = prevAdrr + prevLen;
+                }
+                prevAdrr = lv.address;
+                prevLen = lv.Length;
+            }
+        }
+
+
         //************************************************************************
         //***  FUNCTION TryGetLiteral
         //*** ********************************************************************
@@ -49,7 +70,7 @@ namespace Evans1
         //***  IN/OUT ARGS   :  N/A  
         //***  RETURN :  bool found
         //************************************************************************
-        public bool TryGetLiteral(string literal, out LiteralValue? literalValue)
+        public bool TryGetLiteral(string literal, out LiteralValue literalValue)
         {
             literalValue = null;
             bool found = false;
@@ -77,6 +98,7 @@ namespace Evans1
         public void PrintTable(Chronicler.OutputOptions outputOptions = Chronicler.OutputOptions.IGNORE)
         {
             Chronicler.WriteLine("NAME\t\tVALUE\t\tLENGTH\tADDRESS", outputOptions);
+            Chronicler.WriteLine("=====================================", outputOptions);
             StringBuilder sb = new StringBuilder("");
             foreach (LiteralValue lv in literalTable)
             {
@@ -93,8 +115,7 @@ namespace Evans1
                 }
                 Chronicler.Write(lv.hexValue+sb.ToString(), outputOptions);
                 Chronicler.Write(lv.Length.ToString(), outputOptions);
-                Chronicler.Write("\t" + lv.address.ToString(), outputOptions);
-                Chronicler.NewLine(outputOptions);
+                Chronicler.WriteLine("\t" + lv.address.ToString("X6"), outputOptions);
             }
         }
 
@@ -109,6 +130,8 @@ namespace Evans1
         //************************************************************************
         public void add(LiteralValue literalValue)
         {
+            int curAddr = literalTable.Count!=0?literalTable.Last.Value.address:0;
+            literalValue.address = curAddr + literalValue.Length;
             literalTable.AddLast(literalValue);
         }
 
