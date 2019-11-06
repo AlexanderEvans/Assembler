@@ -200,13 +200,13 @@ namespace Evans1
                                                 }
                                                 break;
                                             case "WORD":
+                                                skipOperandParsing = true;
                                                 if (ExpresionHandler.ResolveF3F4Expresion(dataStructures, expresionLine.operandFieldAndComment, currentLine, out expresionLine.expresionData) != true)
                                                 {
                                                     expresionLine.validLine = false;
                                                 }
                                                 else
                                                 {
-                                                    skipOperandParsing = false;
                                                     if (expresionLine.expresionData.first.HasValue)
                                                     {
                                                         int value = expresionLine.expresionData.first.Value.value;
@@ -318,13 +318,13 @@ namespace Evans1
                                                     dataStructures.symbolTable.addSymbol(expresionLine.label, true, locationCounter, currentLine);
                                                 break;
                                             case "RESB":
+                                                skipOperandParsing = true;
                                                 if (ExpresionHandler.ResolveF3F4Expresion(dataStructures, expresionLine.operandFieldAndComment, currentLine, out expresionLine.expresionData) != true)
                                                 {
                                                     expresionLine.validLine = false;
                                                 }
                                                 else
                                                 {
-                                                    skipOperandParsing = true;
                                                     if (expresionLine.expresionData.first.HasValue)
                                                     {
                                                         int value = expresionLine.expresionData.first.Value.value;
@@ -353,13 +353,13 @@ namespace Evans1
                                                 }
                                                 break;
                                             case "RESW":
+                                                skipOperandParsing = true;
                                                 if (ExpresionHandler.ResolveF3F4Expresion(dataStructures, expresionLine.operandFieldAndComment, currentLine, out expresionLine.expresionData) != true)
                                                 {
                                                     expresionLine.validLine = false;
                                                 }
                                                 else
                                                 {
-                                                    skipOperandParsing = true;
                                                     if (expresionLine.expresionData.first.HasValue)
                                                     {
                                                         int value = expresionLine.expresionData.first.Value.value;
@@ -385,6 +385,14 @@ namespace Evans1
                                                         Chronicler.LogError("BYTE doesn't accept Charachter/Hex values", "pass one");
                                                         expresionLine.validLine = false;
                                                     }
+                                                }
+                                                break;
+                                            case "EXTDEF":
+                                                string[] arr = expresionLine.operandFieldAndComment.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                                                for(int i = 0; i< arr.Length;i++)
+                                                {
+                                                    arr[i] = arr[i].Trim();
+                                                    dataStructures.symbolTable.addSymbol(arr[i], false, 0, currentLine);
                                                 }
                                                 break;
                                             default:
