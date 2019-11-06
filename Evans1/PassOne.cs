@@ -65,7 +65,7 @@ namespace Evans1
         public static void Execute(Globals.DataStructures dataStructures, out List<ExpresionLine> expresionLines, string filePath)
         {
             int locationCounter = 0;
-            int lineNumber = 1;
+            int lineNumber = 0;
             expresionLines = new List<ExpresionLine>();
             Regex regex = new Regex(@"^([\t ]{0,}(?<label>[^\t ]*)[\t ]){0,1}[\t ]{0,}(?<flag>\+{0,1}[\t ]{0,})(?<operation>[^\t ]*)[\t ](?<operandFieldAndComment>.*){0,1}$");
             int programLength = 0;
@@ -430,6 +430,9 @@ namespace Evans1
                                                 case 4:
                                                     locationCounter += 4;
                                                     break;
+                                                default:
+
+                                                    break;
                                             }
                                             if(Parser.guessOperandType(expresionLine.operandFieldAndComment) == Parser.OperandType.DISPLACEMENT_OR_ADDRESS)
                                                 expresionLine.DeferExpresionResolutiontoPass2 = true;
@@ -450,7 +453,23 @@ namespace Evans1
                                 }
                                 else
                                 {
-                                    Chronicler.LogError("Couldn't parse fields on line: "+lineNumber);
+                                    Regex commentChecker = new Regex(@"[\t ]*(?<com>;.*){0,1}");
+                                    Match comment = commentChecker.Match(currentLine);
+                                    if (comment.Success)
+                                    {
+                                        ExpresionLine expresionLine = new ExpresionLine();
+                                        expresionLine.OriginalLine = currentLine;
+                                        expresionLine.locationCounter = 0;
+                                        expresionLine.label = "";
+                                        expresionLine.operation = "";
+                                        expresionLine.operandFieldAndComment = "";
+                                        expresionLine.lineNumber = lineNumber;
+                                        expresionLine.format4indicator = "";
+                                        expresionLine.DeferExpresionResolutiontoPass2 = false;
+                                        expresionLines.Add(expresionLine);
+                                    }
+                                    else
+                                        Chronicler.LogError("Couldn't parse fields on line: "+lineNumber);
                                 }
                             }
                         }

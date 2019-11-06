@@ -98,7 +98,7 @@ namespace Evans1
         public void PrintTable(Chronicler.OutputOptions outputOptions = Chronicler.OutputOptions.IGNORE)
         {
             Chronicler.WriteLine("NAME\t\tVALUE\t\tLENGTH\tADDRESS", outputOptions);
-            Chronicler.WriteLine("=====================================", outputOptions);
+            Chronicler.WriteLine("===============================================", outputOptions);
             StringBuilder sb = new StringBuilder("");
             foreach (LiteralValue lv in literalTable)
             {
