@@ -11,6 +11,7 @@ namespace Evans1
         public class ExpresionLine
         {
             public bool validLine = true;
+            public bool CommentLine = false;
             public bool DeferExpresionResolutiontoPass2 = false;
             public int lineNumber=0;
             public int locationCounter=0;
@@ -465,6 +466,7 @@ namespace Evans1
                                         expresionLine.operandFieldAndComment = "";
                                         expresionLine.lineNumber = lineNumber;
                                         expresionLine.format4indicator = "";
+                                        expresionLine.CommentLine = true;
                                         expresionLine.DeferExpresionResolutiontoPass2 = false;
                                         expresionLines.Add(expresionLine);
                                     }
@@ -503,12 +505,14 @@ namespace Evans1
                         curLinNum = expLine.lineNumber;
 
                         file.Write(curLinNum.ToString() + "\t");
-                        file.Write(expLine.locationCounter.ToString("X6") + "\t");
+                        if (expLine.CommentLine != true)
+                            file.Write(expLine.locationCounter.ToString("X6") + "\t");
                         file.Write(expLine.OriginalLine);
                         file.Write("\n");
 
                         Chronicler.Write(curLinNum.ToString() + "\t");
-                        Chronicler.Write(expLine.locationCounter.ToString("X6") + "\t");
+                        if (expLine.CommentLine != true)
+                            Chronicler.Write(expLine.locationCounter.ToString("X6") + "\t");
                         Chronicler.WriteLine(expLine.OriginalLine);
                     }
                 }
