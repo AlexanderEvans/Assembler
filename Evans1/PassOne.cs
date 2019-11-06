@@ -200,7 +200,7 @@ namespace Evans1
                                                 }
                                                 break;
                                             case "WORD":
-                                                skipOperandParsing = true;
+                                                expresionLine.DeferExpresionResolutiontoPass2=true;
                                                 if (ExpresionHandler.ResolveF3F4Expresion(dataStructures, expresionLine.operandFieldAndComment, currentLine, out expresionLine.expresionData) != true)
                                                 {
                                                     expresionLine.validLine = false;
@@ -222,10 +222,11 @@ namespace Evans1
                                                             expresionLine.validLine = false;
 
                                                         if (expresionLine.validLine && expresionLine.label!="")
-                                                            dataStructures.symbolTable.addSymbol(expresionLine.label, expresionLine.expresionData.rflag.Value, value, currentLine);
+                                                            dataStructures.symbolTable.addSymbol(expresionLine.label, true, locationCounter, currentLine);
                                                         else
                                                             Chronicler.LogError("Couldn't add \"" + currentLine + "\" to symbol table.", "pass one");
-                                                        locationCounter += 3;
+                                                        if(expresionLine.validLine)
+                                                            locationCounter += 3;
                                                     }
                                                     else if (expresionLine.expresionData.literal != null)
                                                     {
@@ -343,7 +344,8 @@ namespace Evans1
                                                         }
                                                         else
                                                             Chronicler.LogError("Couldn't add \"" + currentLine + "\" to symbol table.", "pass one");
-                                                        locationCounter += value;
+                                                        if (expresionLine.validLine)
+                                                            locationCounter += value;
                                                     }
                                                     else if (expresionLine.expresionData.literal != null)
                                                     {
@@ -378,7 +380,8 @@ namespace Evans1
                                                         }
                                                         else
                                                             Chronicler.LogError("Couldn't add \"" + currentLine + "\" to symbol table.", "pass one");
-                                                        locationCounter += value * 3;
+                                                        if (expresionLine.validLine)
+                                                            locationCounter += value * 3;
                                                     }
                                                     else if (expresionLine.expresionData.literal != null)
                                                     {
@@ -387,7 +390,7 @@ namespace Evans1
                                                     }
                                                 }
                                                 break;
-                                            case "EXTDEF":
+                                            case "EXTREF":
                                                 string[] arr = expresionLine.operandFieldAndComment.Split(',', StringSplitOptions.RemoveEmptyEntries);
                                                 for(int i = 0; i< arr.Length;i++)
                                                 {
@@ -447,8 +450,7 @@ namespace Evans1
                                 }
                                 else
                                 {
-
-                                    Chronicler.LogError("Couldn't parse fields on line: ");
+                                    Chronicler.LogError("Couldn't parse fields on line: "+lineNumber);
                                 }
                             }
                         }
