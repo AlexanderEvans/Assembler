@@ -68,7 +68,7 @@ namespace Evans1
             int locationCounter = 0;
             int lineNumber = 0;
             expresionLines = new List<ExpresionLine>();
-            Regex regex = new Regex(@"^([\t ]{0,}(?<label>[^\t ]*)[\t ]){0,1}[\t ]{0,}(?<flag>\+{0,1}[\t ]{0,})(?<operation>[^\t ]*)[\t ](?<operandFieldAndComment>.*){0,1}$");
+            Regex regex = new Regex(@"^([\t ]*(?<label>[^\s]+:)[\t ]*){0,1}[\t ]*(?<flag>\+{0,1}[\t ]*)(?<operation>[^\s]+)(?<operandFieldAndComment>[\t ].*){0,1}[\t ]*($|(\r?\n))");
             int programLength = 0;
             bool skipOperandParsing = false;
             try
@@ -440,6 +440,7 @@ namespace Evans1
                                             else
                                                 expresionLine.DeferExpresionResolutiontoPass2 = false;
                                         }
+                                        Chronicler.Write("Parsing operation: " + expresionLine.operation + "\n", Chronicler.OutputOptions.INFO);
                                     }
 
 

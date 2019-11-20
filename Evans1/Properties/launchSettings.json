@@ -1,7 +1,8 @@
 {
   "profiles": {
     "Evans1": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "commandLineArgs": "ExpresionFile.txt"
     }
   }
 }
