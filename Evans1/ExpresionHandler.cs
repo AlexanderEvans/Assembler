@@ -261,7 +261,12 @@ namespace Evans1
                         Chronicler.LogError("Couldn't resolve symbols in artithmetic: "+currentLine, "term arithmatic module");
                     }
                     rtnVal = rtnVal == true ? ParseTerm(dataStructures.symbolTable, second, out expresionData.second, currentLine) : false;
-                        
+                }
+
+
+                if (expresionData.first.HasValue && !expresionData.second.HasValue && second == "")
+                {
+                    expresionData.rflag = expresionData.first.Value.RFlag;
                 }
             }
             return rtnVal;

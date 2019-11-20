@@ -191,7 +191,12 @@ namespace Evans1
                                                     else if (expresionLine.expresionData.literal != null)
                                                     {
                                                         if (expresionLine.expresionData.literal.isOldStyleLiteral)
+                                                        {
+                                                            if (expresionLine.label != "")
+                                                                dataStructures.symbolTable.addSymbol(expresionLine.label, true, locationCounter, currentLine);
                                                             locationCounter += expresionLine.expresionData.literal.Length;
+                                                            expresionLine.Opcode = expresionLine.expresionData.literal.hexValue;
+                                                        }
                                                         else
                                                         {
                                                             expresionLine.validLine = false;
@@ -224,10 +229,13 @@ namespace Evans1
 
                                                         if (expresionLine.validLine && expresionLine.label!="")
                                                             dataStructures.symbolTable.addSymbol(expresionLine.label, true, locationCounter, currentLine);
-                                                        else
-                                                            Chronicler.LogError("Couldn't add \"" + currentLine + "\" to symbol table.", "pass one");
                                                         if(expresionLine.validLine)
+                                                        {
+                                                            expresionLine.Opcode = value.ToString();
                                                             locationCounter += 3;
+                                                        }
+                                                        else
+                                                            Chronicler.LogError("Couldn't parse \"" + currentLine + "\"", "pass one");
                                                     }
                                                     else if (expresionLine.expresionData.literal != null)
                                                     {

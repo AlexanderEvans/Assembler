@@ -49,6 +49,7 @@ namespace Evans1
             PassOne.Execute(dataStructures, out System.Collections.Generic.List<PassOne.ExpresionLine> expresionLines, "../../../" + filePath);
             //symbolTable.SearchSymbols("../../../" + filePath);
             Chronicler.HoldOutput();
+            PassTwo.Execute(dataStructures, expresionLines, "../../../" + filePath);
         }
     }
 }
