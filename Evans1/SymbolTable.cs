@@ -332,7 +332,7 @@ namespace Evans1
         //            StringBuilder stringBuilder = new StringBuilder();
         //            for (int i = 0; i < currentLine.Length && i < 6; i++)
         //                stringBuilder.Append(currentLine[i]);
-                        
+
         //            if (SearchSymbol(stringBuilder.ToString(), out Globals.Symbol? temp))
         //            {
         //                Chronicler.Write("Found symbol: ");
@@ -364,6 +364,25 @@ namespace Evans1
             foreach (KeyValuePair<string, Globals.Symbol> keyValuePair in SymbolTableBST)
             {
                 keyValuePair.Value.Print(outputOptions);
+            }
+        }
+
+        //************************************************************************
+        //***  FUNCTION PrintFile 
+        //*** ********************************************************************
+        //***  DESCRIPTION  :  prints the current contents of the symbol table
+        //***  INPUT ARGS   :  N/A 
+        //***  OUTPUT ARGS :  N/A
+        //***  IN/OUT ARGS   :  N/A  
+        //***  RETURN :  N/A
+        //************************************************************************
+        public void PrintFile(StreamWriter streamWriter, Chronicler.OutputOptions outputOptions = Chronicler.OutputOptions.IGNORE)
+        {
+            streamWriter.WriteLine("Symbol\tRFlag\tValue \tMFlag \tIFlag", outputOptions);
+            streamWriter.WriteLine("=====================================", outputOptions);
+            foreach (KeyValuePair<string, Globals.Symbol> keyValuePair in SymbolTableBST)
+            {
+                keyValuePair.Value.Print(outputOptions, streamWriter);
             }
         }
     }

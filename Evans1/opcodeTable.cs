@@ -12,6 +12,18 @@ namespace Evans1
             public int code;
             public int format;
         }
+        public Dictionary<string, int> RegisterTable = new Dictionary<string, int>
+        {
+            {"A"   , 0 },
+            {"X"   , 1 },
+            {"L"   , 2 },
+            {"B"   , 3 },
+            {"S"   , 4 },
+            {"T"   , 5 },
+            {"F"   , 6 },
+            {"PC"   , 8 },
+            {"SW"   , 9 },
+        };
         public List<string> assemblerDirectives = new List<string>
         {
             {"EQU"},

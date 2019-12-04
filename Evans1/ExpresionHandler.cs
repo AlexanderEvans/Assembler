@@ -119,7 +119,7 @@ namespace Evans1
                     expresionData.literal = tmp;
                 }
             }
-            else if (expresionString[0] == '@')
+            else if (expresionString.Length>0 && expresionString[0] == '@')
             {
                 expresionString = expresionString.Substring(1, expresionString.Length - 1);
                 hasXValue = testXValue.Match(expresionString).Groups["x"].Value != "";
@@ -138,7 +138,7 @@ namespace Evans1
                     Chronicler.LogError("Can not apply both indirect adressing \n\tand x register indexing, skipping: \"" + currentLine + "\"", "Resovling Expresion");
                 }
             }
-            else if (expresionString[0] == '#')
+            else if (expresionString.Length > 0 && expresionString[0] == '#')
             {
                 expresionString = expresionString.Substring(1, expresionString.Length - 1);
                 hasXValue = testXValue.Match(expresionString).Groups["x"].Value != "";

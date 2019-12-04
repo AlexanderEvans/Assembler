@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
 //*******************************************************************
 //*** NAME : Alex Evans
 //*** CLASS : CSc 354 Intro to systems
@@ -53,9 +54,12 @@ namespace Evans1
             //***  IN/OUT ARGS   :  N/A  
             //***  RETURN :  N/A
             //************************************************************************
-            public void Print(Chronicler.OutputOptions outputOptions)
+            public void Print(Chronicler.OutputOptions outputOptions, StreamWriter streamWriter = null)
             {
-                Chronicler.WriteLine(label + "\t" + RFlag + "\t" + value.ToString("X6") + "\t" + MFlag + "\t" + IFlag, outputOptions);
+                if(streamWriter==null)
+                    Chronicler.WriteLine(label + "\t" + RFlag + "\t" + value.ToString("X6") + "\t" + MFlag + "\t" + IFlag, outputOptions);
+                else
+                    streamWriter.WriteLine(label + "\t" + RFlag + "\t" + value.ToString("X6") + "\t" + MFlag + "\t" + IFlag, outputOptions);
             }
             //************************************************************************
             //***  FUNCTION AddRFlags 
@@ -126,6 +130,9 @@ namespace Evans1
             public enum Arithmetic { ADD, SUBTRACT};
             public LiteralTable.LiteralValue literal;
             public Symbol? first;
+            /// <summary>
+            /// plus,minus,null
+            /// </summary>
             public Arithmetic? operatorValue;
             public bool? rflag;
             public Symbol? second;
@@ -156,6 +163,9 @@ namespace Evans1
                 }
             }
             public bool IsSymbol => first != null;
+            /// <summary>
+            /// SYMBOL, LITERAL, EMPTY, ERROR
+            /// </summary>
             public Contents ExpresionType
             {
                 get
